@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  dead
+  alive
+  unknown
+}
+
+model Character {
+  id              String  @id @default(cuid())
+  name            String  @unique
+  gender          String
+  species         String
+  status          Status
+  firstAppearance Int     @map("first_appearance")
+  description     String?
+  imageUrl        String  @map("image_url")
+  actorId         String  @map("actor_id")
+  emojiId         String  @unique @map("emoji_id")
+
+  actor                 Actor            @relation(fields: [actorId], references: [id])
+  movies                Movie[]          @relation("character_movie")
+  teams                 Team[]           @relation("character_team")
+  quote                 Quote[]
+  item                  Item[]
+  emoji                 Emoji            @relation(fields: [emojiId], references: [id])
+  dailyClassicChallenge DailyChallenge[] @relation("daily_classic_character")
+  dailyPosterChallenge  DailyChallenge[] @relation("daily_poster_character")
+
+  @@index([name])
+  @@map("characters")
+}
+
+model Actor {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  imageUrl String? @map("image_url")
+
+  character Character[]
+
+  @@index([name])
+  @@map("actors")
+}
+
+model Movie {
+  id          String  @id @default(cuid())
+  title       String  @unique
+  releaseYear Int     @map("release_year")
+  phase       Int?
+  isSeries    Boolean @default(false) @map("is_series")
+  posterUrl   String  @map("poster_url")
+
+  characters     Character[]      @relation("character_movie")
+  dailyChallenge DailyChallenge[]
+
+  @@index([title])
+  @@map("movies")
+}
+
+model Quote {
+  id          String @id @default(cuid())
+  text        String @unique
+  characterId String @map("character_id")
+
+  character      Character        @relation(fields: [characterId], references: [id])
+  dailyChallenge DailyChallenge[]
+
+  @@map("quotes")
+}
+
+model Item {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+  imageUrl    String? @map("image_url")
+  characterId String  @map("character_id")
+
+  character      Character        @relation(fields: [characterId], references: [id])
+  dailyChallenge DailyChallenge[]
+
+  @@map("items")
+}
+
+model Emoji {
+  id          String @id @default(cuid())
+  body        String @unique
+  characterId String @map("character_id")
+
+  character      Character?
+  dailyChallenge DailyChallenge[]
+
+  @@map("emojis")
+}
+
+model Team {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+
+  members Character[] @relation("character_team")
+
+  @@map("teams")
+}
+
+model DailyChallenge {
+  id   String   @id @default(cuid())
+  date DateTime @unique @db.Date
+
+  classicCharacterId String @map("classic_character_id")
+  posterCharacterId  String @map("poster_character_id")
+  posterMovieId      String @map("poster_movie_id")
+  quoteId            String @map("quote_id")
+  itemId             String @map("item_id")
+  emojiId            String @map("emoji_id")
+
+  character       Character @relation("daily_classic_character", fields: [classicCharacterId], references: [id])
+  posterCharacter Character @relation("daily_poster_character", fields: [posterCharacterId], references: [id])
+  posterMovie     Movie     @relation(fields: [posterMovieId], references: [id])
+  quote           Quote     @relation(fields: [quoteId], references: [id])
+  item            Item      @relation(fields: [itemId], references: [id])
+  emoji           Emoji     @relation(fields: [emojiId], references: [id])
+
+  @@index([date])
+  @@map("daily_challenges")
+}
