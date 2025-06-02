@@ -13,26 +13,31 @@ enum Status {
   unknown
 }
 
+enum Gender {
+  male
+  female
+}
+
 model Character {
   id              String  @id @default(cuid())
   name            String  @unique
-  gender          String
+  gender          Gender
   species         String
   status          Status
   firstAppearance Int     @map("first_appearance")
   description     String?
+  emojis          String? @map("emojis")
   imageUrl        String  @map("image_url")
   actorId         String  @map("actor_id")
-  emojiId         String  @unique @map("emoji_id")
 
   actor                 Actor            @relation(fields: [actorId], references: [id])
   movies                Movie[]          @relation("character_movie")
   teams                 Team[]           @relation("character_team")
   quote                 Quote[]
   item                  Item[]
-  emoji                 Emoji            @relation(fields: [emojiId], references: [id])
   dailyClassicChallenge DailyChallenge[] @relation("daily_classic_character")
   dailyPosterChallenge  DailyChallenge[] @relation("daily_poster_character")
+  dailyEmojiChallenge   DailyChallenge[] @relation("daily_emoji_character")
 
   @@index([name])
   @@map("characters")
@@ -88,17 +93,6 @@ model Item {
   @@map("items")
 }
 
-model Emoji {
-  id          String @id @default(cuid())
-  body        String @unique
-  characterId String @map("character_id")
-
-  character      Character?
-  dailyChallenge DailyChallenge[]
-
-  @@map("emojis")
-}
-
 model Team {
   id          String  @id @default(cuid())
   name        String  @unique
@@ -116,6 +110,7 @@ model DailyChallenge {
   classicCharacterId String @map("classic_character_id")
   posterCharacterId  String @map("poster_character_id")
   posterMovieId      String @map("poster_movie_id")
+  emojiCharacterId   String @map("emoji_character_id")
   quoteId            String @map("quote_id")
   itemId             String @map("item_id")
   emojiId            String @map("emoji_id")
@@ -123,9 +118,9 @@ model DailyChallenge {
   character       Character @relation("daily_classic_character", fields: [classicCharacterId], references: [id])
   posterCharacter Character @relation("daily_poster_character", fields: [posterCharacterId], references: [id])
   posterMovie     Movie     @relation(fields: [posterMovieId], references: [id])
+  emojiCharacter  Character @relation("daily_emoji_character", fields: [emojiCharacterId], references: [id])
   quote           Quote     @relation(fields: [quoteId], references: [id])
   item            Item      @relation(fields: [itemId], references: [id])
-  emoji           Emoji     @relation(fields: [emojiId], references: [id])
 
   @@index([date])
   @@map("daily_challenges")
