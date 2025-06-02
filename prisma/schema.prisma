@@ -113,7 +113,6 @@ model DailyChallenge {
   emojiCharacterId   String @map("emoji_character_id")
   quoteId            String @map("quote_id")
   itemId             String @map("item_id")
-  emojiId            String @map("emoji_id")
 
   character       Character @relation("daily_classic_character", fields: [classicCharacterId], references: [id])
   posterCharacter Character @relation("daily_poster_character", fields: [posterCharacterId], references: [id])
