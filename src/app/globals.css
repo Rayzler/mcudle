@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --dark-red: #b81414;
+  --red: #ff0d0d;
 }
 
 @theme inline {
@@ -10,6 +12,32 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-red: var(--red);
+  --color-dark-red: var(--dark-red);
+
+  --animate-red-glow: red-glow 1.5s ease-out infinite alternate;
+
+  @keyframes red-glow {
+    from {
+      border-color: #b80000;
+      box-shadow: 0 0 5px rgba(255, 0, 0, 0.35);
+    }
+    to {
+      border-color: #ff0000;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.75);
+    }
+  }
+}
+
+@layer utilities {
+  .small-caps {
+    font-variant: small-caps;
+  }
+
+  .box-reflect {
+    -webkit-box-reflect: below 5px
+      linear-gradient(transparent, rgba(255, 255, 255, 0.25));
+  }
 }
 
 @media (prefers-color-scheme: dark) {
