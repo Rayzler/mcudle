@@ -1,6 +1,8 @@
 import MainButton from "@/components/main-button";
 import Image from "next/image";
 
+const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
+
 export default function Home() {
   return (
     <div className="grid grid-rows-[1fr_20px] items-center justify-items-center min-h-screen p-8 pt-16 gap-8">
@@ -24,10 +26,26 @@ export default function Home() {
         </div>
       </main>
       {/* TODO: Footer */}
-      <footer className="flex gap-[24px] flex-wrap items-center justify-center">
+      <footer className="flex gap-2 flex-col flex-wrap items-center justify-center">
+        <div className="flex gap-[24px] flex-wrap items-center justify-center">
+          <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/globe.svg"
+            alt="File icon"
+            width={16}
+            height={16}
+          />
+          {domain} — 2025 
+        </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="#"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -38,38 +56,10 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Learn
+          Privacy Policy
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+        </div>
+        <p>Marvel does not endorse this application.</p>
       </footer>
     </div>
   );
