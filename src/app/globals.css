@@ -1,10 +1,15 @@
 @import "tailwindcss";
+@import "tailwindcss-animated";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --darkest-red: #790000;
   --dark-red: #b81414;
   --red: #ff0d0d;
+  --correct: #208f16;
+  --incorrect: #b81414;
+  --partial: #b88414;
 }
 
 @theme inline {
@@ -14,6 +19,10 @@
   --font-mono: var(--font-geist-mono);
   --color-red: var(--red);
   --color-dark-red: var(--dark-red);
+  --color-darkest-red: var(--darkest-red);
+  --color-correct: var(--correct);
+  --color-incorrect: var(--incorrect);
+  --color-partial: var(--partial);
 
   --animate-red-glow: red-glow 1.5s ease-out infinite alternate;
 
@@ -37,6 +46,11 @@
   .box-reflect {
     -webkit-box-reflect: below 5px
       linear-gradient(transparent, rgba(255, 255, 255, 0.25));
+  }
+
+  .box-reflect-mask {
+    -webkit-box-reflect: below 5px
+      linear-gradient(transparent, transparent);
   }
 }
 

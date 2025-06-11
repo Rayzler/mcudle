@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { getDailyChallenge } from "@/actions/dailyChallenge";
 import { shareTech } from "@/fonts";
+import Footer from "@/components/footer";
+import Logo from "@/components/logo";
 
 export const metadata: Metadata = {
   title: "MCU-DLE",
@@ -17,13 +19,21 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body
-        className={`${shareTech.className} antialiased`}
-      >
-        <div className="absolute inset-0 shadow-[inset_0px_8px_80px_30px_rgba(0,_0,_0,_0.8)] overflow-hidden bg-neutral-950 -z-50">
-          <img src="/images/ui/main_bg.jpg" alt="Background" className="object-cover w-full h-full -z-10 grayscale opacity-5" />
+      <body className={`${shareTech.className} antialiased`}>
+        <div className="fixed inset-0 shadow-[inset_0px_8px_80px_30px_rgba(0,_0,_0,_0.8)] overflow-hidden bg-neutral-950 -z-50">
+          <img
+            src="/images/ui/main_bg.jpg"
+            alt="Background"
+            className="object-cover w-full h-full -z-10 grayscale opacity-5"
+          />
         </div>
-        {children}
+        <div className="grid grid-rows-[1fr_20px] items-center justify-items-center min-h-screen p-8 pt-16 gap-8">
+          <main className="flex flex-col gap-5 justify-start items-center w-full h-full">
+            <Logo />
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

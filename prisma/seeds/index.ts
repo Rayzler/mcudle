@@ -12,6 +12,7 @@ async function main() {
   console.log("Starting seeding...");
 
   // Clear existing data
+  await prisma.dailyChallenge.deleteMany();
   await prisma.item.deleteMany();
   await prisma.quote.deleteMany();
   await prisma.character.deleteMany();

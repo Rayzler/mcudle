@@ -1,20 +1,22 @@
+"use client";
+
 import { clsx } from "clsx";
+import Link from "next/link";
 
 type Props = {
-  onClick?: () => void;
+  href: string;
   label: string;
   description?: string;
 };
 
-const MainButton = ({ onClick, label, description }: Props) => {
+const MainButton = ({ href, label, description }: Props) => {
   return (
-    <button
+    <Link href={href}
       className={clsx(
-        "group relative bg-white text-white rounded-md tracking-widest py-4 transition-all duration-500 min-w-2xs w-full max-w-sm",
+        "group relative bg-white text-white rounded-md tracking-widest py-4 transition-all duration-500 min-w-2xs w-full max-w-sm text-center",
         "hover:bg-red hover:text-red hover:animate-red-glow",
         "before:absolute before:inset-0.5 before:bg-neutral-800 before:rounded-sm"
       )}
-      onClick={onClick}
     >
       <div className="relative">
         <h2 className="uppercase text-lg group-hover:tracking-[0.25em] transition-all duration-500">{label}</h2>
@@ -27,7 +29,7 @@ const MainButton = ({ onClick, label, description }: Props) => {
           "group-hover:before:left-1/5 group-hover:after:left-4/5"
         )}
       />
-    </button>
+    </Link>
   );
 };
 
