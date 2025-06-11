@@ -1,7 +1,8 @@
 import { getUTCDate } from "@/lib/dateUtils";
 import { prisma } from "@/lib/prisma";
+import { DailyChallenge } from "@/types/prisma";
 
-export async function getDailyChallenge() {
+export const getDailyChallenge = async (): Promise<DailyChallenge> => {
   const today = getUTCDate();
 
   const challenge = await prisma.dailyChallenge.findUnique({
@@ -9,7 +10,12 @@ export async function getDailyChallenge() {
       date: today
     },
     include: {
-      character: true,
+      character: {
+        include: {
+          teams: true,
+          quote: true,
+        }
+      },
       posterCharacter: true,
       posterMovie: true,
       emojiCharacter: true,
@@ -23,9 +29,9 @@ export async function getDailyChallenge() {
   }
 
   return challenge;
-}
+};
 
-export async function createDailyChallenge() {
+export const createDailyChallenge = async (): Promise<DailyChallenge> => {
   const today = getUTCDate();
 
   const characters = await prisma.character.findMany();
@@ -64,4 +70,4 @@ export async function createDailyChallenge() {
   });
 
   return dailyChallenge;
-}
+};
