@@ -81,6 +81,10 @@ export async function seedActors(prisma: PrismaClient) {
     {
       name: "Aaron Taylor-Johnson",
       imageUrl: null
+    },
+    {
+      name: "Sebastian Stan",
+      imageUrl: null
     }
   ];
 

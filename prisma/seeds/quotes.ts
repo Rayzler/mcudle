@@ -62,7 +62,7 @@ export async function seedQuotes(prisma: PrismaClient) {
       text: "Sometimes you gotta run before you can walk.",
       characterId:
         (await prisma.character
-          .findUnique({ where: { name: "Black Panther" } })
+          .findUnique({ where: { name: "Iron Man" } })
           .then((character) => character?.id)) || ""
     },
     {
