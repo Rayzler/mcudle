@@ -10,7 +10,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2008,
       description: "Genius, billionaire, playboy, philanthropist.",
       emojis: "😎🤖🦾🧠",
-      imageUrl: "https://www.xtrafondos.com/wallpapers/nuevo-traje-de-iron-man-6726.jpg",
+      imageUrl: "/characters/iron_man.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Robert Downey Jr." } })
@@ -24,7 +24,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2011,
       description: "Super soldier and leader of the Avengers.",
       emojis: "🦸‍♂️🛡️💪🦅",
-      imageUrl: "https://www.xtrafondos.com/wallpapers/capitan-america-1415.jpg",
+      imageUrl: "/images/characters/captain_america.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Chris Evans" } })
@@ -38,7 +38,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2010,
       description: "Skilled spy and assassin.",
       emojis: "🕷️🖤🔫👩‍🦰",
-      imageUrl: "https://www.xtrafondos.com/wallpapers/viuda-negra-pelicula-7423.jpg",
+      imageUrl: "/images/characters/black_widow.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Scarlett Johansson" } })
@@ -52,7 +52,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2011,
       description: "God of Thunder and protector of Asgard.",
       emojis: "⚡️🪓🌩️👑",
-      imageUrl: "https://www.xtrafondos.com/wallpapers/resized/thor-en-avengers-1277.jpg?s=large",
+      imageUrl: "/images/characters/thor.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Chris Hemsworth" } })
@@ -66,7 +66,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2008,
       description: "The strongest Avenger.",
       emojis: "🟩💪😡👕",
-      imageUrl: "https://wallpapersok.com/images/high/angry-hulk-4k-marvel-iphone-w3jrbhyk7kitvwtb.jpg",
+      imageUrl: "/images/characters/hulk.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Mark Ruffalo" } })
@@ -80,7 +80,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2011,
       description: "Master archer and marksman.",
       emojis: "🏹🟣👁️🎯",
-      imageUrl: "https://wallpapers.com/images/hd/hawkeye-4k-marvel-iphone-purple-sddkgfs67kr4emvq.jpg",
+      imageUrl: "/images/characters/hawkeye.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Jeremy Renner" } })
@@ -94,7 +94,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2015,
       description: "Powerful sorceress and member of the Avengers.",
       emojis: "🧙‍♀️🔮❤️✨",
-      imageUrl: "https://wallpapers.com/images/hd/wanda-scarlet-witch-the-hydra-4k-i7pi11enppt6a79w.jpg",
+      imageUrl: "/images/characters/scarlet_witch.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Elizabeth Olsen" } })
@@ -108,21 +108,21 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2002,
       description: "Teenager with spider-like abilities.",
       emojis: "🕷️🕸️🤟🧑‍🎤",
-      imageUrl: "https://www.xtrafondos.com/wallpapers/spider-man-marvel-avengers-10921.jpg",
+      imageUrl: "/images/characters/spiderman.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Tom Holland" } })
           .then((actor) => actor?.id)) || ""
     },
     {
-      name: "Hawkeye (Kate Bishop)",
+      name: "Kate Bishop",
       gender: Gender.female,
       species: "Human",
       status: Status.alive,
       firstAppearance: 2021,
       description: "Young archer and member of the Young Avengers.",
       emojis: "🏹🟣👧🎯",
-      imageUrl: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2392efe1-1e60-4084-936b-0f2fb4ba33aa/djsgovy-d36946bf-86ef-45de-bd64-0ec3481f3e50.jpg/v1/fill/w_1001,h_798,q_70,strp/kate_bishop___2025_05_21_by_skyedigitaltales_djsgovy-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyMCIsInBhdGgiOiJcL2ZcLzIzOTJlZmUxLTFlNjAtNDA4NC05MzZiLTBmMmZiNGJhMzNhYVwvZGpzZ292eS1kMzY5NDZiZi04NmVmLTQ1ZGUtYmQ2NC0wZWMzNDgxZjNlNTAuanBnIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.oinhMY1hqxEJ86zCOrXAiVnwT0qWNcC6KZDriaLbqh0",
+      imageUrl: "/images/characters/kate_bishop.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Hailee Steinfeld" } })
@@ -136,7 +136,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2016,
       description: "Master of the Mystic Arts.",
       emojis: "🧙‍♂️🔮👐🕳️",
-      imageUrl: "https://images5.alphacoders.com/916/916247.jpg",
+      imageUrl: "/images/characters/doctor_strange.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Benedict Cumberbatch" } })
@@ -151,7 +151,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       description:
         "Tree-like creature and member of the Guardians of the Galaxy.",
       emojis: "🌳🪴🧒🌱",
-      imageUrl: "https://wallpapercat.com/w/full/1/b/f/461219-1440x2560-samsung-hd-groot-wallpaper-photo.jpg",
+      imageUrl: "/images/characters/groot.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Vin Diesel" } })
@@ -165,7 +165,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2016,
       description: "King of Wakanda and skilled fighter.",
       emojis: "🐾👑🖤🐆",
-      imageUrl: "https://fondosmil.co/fondo/108860.png",
+      imageUrl: "/images/characters/black_panther.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Chadwick Boseman" } })
@@ -179,7 +179,7 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2014,
       description: "The Mad Titan and conqueror of worlds.",
       emojis: "🪐💜🧤💪",
-      imageUrl: "https://c4.wallpaperflare.com/wallpaper/741/92/981/avengers-infinity-war-thanos-4k-josh-brolin-wallpaper-preview.jpg",
+      imageUrl: "/images/characters/thanos.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Josh Brolin" } })
@@ -193,11 +193,72 @@ export async function seedCharacters(prisma: PrismaClient) {
       firstAppearance: 2015,
       description: "Super-speedster and twin brother of Wanda Maximoff.",
       emojis: "⚡️🟦👟👦",
-      imageUrl: "https://c4.wallpaperflare.com/wallpaper/425/807/827/fiction-superhero-comic-aaron-taylor-johnson-wallpaper-preview.jpg",
+      imageUrl: "/images/characters/pietro_maximoff.jpg",
       actorId:
         (await prisma.actor
           .findUnique({ where: { name: "Aaron Taylor-Johnson" } })
           .then((actor) => actor?.id)) || ""
+    },
+    {
+      name: "Loki",
+      gender: Gender.male,
+      species: "Asgardian",
+      status: Status.alive,
+      firstAppearance: 2011,
+      description: "God of Mischief and adopted brother of Thor.",
+      emojis: "🪄👑🟩🐍",
+      imageUrl: "/images/characters/loki.jpg",
+      actorId:
+        (await prisma.actor
+          .findUnique({ where: { name: "Tom Hiddleston" } })
+          .then((actor) => actor?.id)) || ""
+    },
+    {
+      name: "Winter Soldier",
+      gender: Gender.male,
+      species: "Human",
+      status: Status.alive,
+      firstAppearance: 2014,
+      description: "Formerly known as Bucky Barnes, Steve Rogers' best friend.",
+      emojis: "❄️🔫🖤",
+      imageUrl: "/images/characters/winter_soldier.jpg",
+      actorId:
+        (await prisma.actor
+          .findUnique({ where: { name: "Sebastian Stan" } })
+          .then((actor) => actor?.id)) || ""
+    },
+    {
+      name: "Nick Fury",
+      gender: Gender.male,
+      species: "Human",
+      status: Status.alive,
+      firstAppearance: 2008,
+      description: "Director of S.H.I.E.L.D. and former soldier.",
+      emojis: "🕶️🔫🖤",
+      imageUrl: "/images/characters/nick_fury.jpg",
+      actorId: null
+    },
+    {
+      name: "Abomination",
+      gender: Gender.male,
+      species: "Human",
+      status: Status.alive,
+      firstAppearance: 2008,
+      description: "Formerly known as Emil Blonsky, a soldier who transformed into a monster.",
+      emojis: "🟩💪👹",
+      imageUrl: "/images/characters/abomination.jpg",
+      actorId: null
+    },
+    {
+      name: "Red Skull",
+      gender: Gender.male,
+      species: "Human",
+      status: Status.alive,
+      firstAppearance: 2011,
+      description: "Leader of HYDRA and enemy of Captain America.",
+      emojis: "🟥💀🔫",
+      imageUrl: "/images/characters/red_skull.jpg",
+      actorId: null
     }
   ];
 

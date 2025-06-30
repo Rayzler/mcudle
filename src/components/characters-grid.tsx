@@ -140,6 +140,16 @@ const CharactersGrid = ({ attempts, character }: CharactersGridProps) => {
                     : "bg-incorrect"
                 )}
               >
+                {attempt.firstAppearance !== character.firstAppearance && (
+                  <img
+                    src="/images/ui/arrow_up.svg"
+                    alt=""
+                    className={clsx("invert absolute opacity-30 p-2", {
+                      "rotate-180":
+                        attempt.firstAppearance > character.firstAppearance
+                    })}
+                  />
+                )}
                 {attempt.firstAppearance}
               </div>
             </div>
