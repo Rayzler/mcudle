@@ -4,7 +4,7 @@ import { kdamThmorPro } from "@/fonts";
 import { capitalize } from "@/lib/stringUtils";
 import { Character } from "@/types/prisma";
 import clsx from "clsx";
-import { useCallback } from "react";
+import { useCallback, useRef, useLayoutEffect, useState } from "react";
 
 type CharactersGridProps = {
   attempts: Character[];
@@ -12,6 +12,11 @@ type CharactersGridProps = {
 };
 
 const CharactersGrid = ({ attempts, character }: CharactersGridProps) => {
+  const [overflowStates, setOverflowStates] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const elementRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
   const checkTeamStatus = useCallback(
     (attempt: Character) => {
       const attemptTeamIds = (attempt.teams || []).map((t) => t.id).sort();
@@ -36,6 +41,22 @@ const CharactersGrid = ({ attempts, character }: CharactersGridProps) => {
     },
     [character]
   );
+
+  useLayoutEffect(() => {
+    attempts.forEach((attempt) => {
+      const element = elementRefs.current[attempt.id];
+      if (element) {
+        const hasOverflow = element.scrollHeight > element.clientHeight;
+
+        setOverflowStates((prev) => {
+          if (prev[attempt.id] !== hasOverflow) {
+            return { ...prev, [attempt.id]: hasOverflow };
+          }
+          return prev;
+        });
+      }
+    });
+  });
 
   return (
     <div className="w-full mt-12 mb-12 max-w-[840px] flex flex-col gap-2">
@@ -62,6 +83,8 @@ const CharactersGrid = ({ attempts, character }: CharactersGridProps) => {
       <div className={`${kdamThmorPro.className} flex flex-col gap-2`}>
         {attempts.map((attempt) => {
           const teamStatus = checkTeamStatus(attempt);
+          const hasOverflow = overflowStates[attempt.id] || false;
+
           return (
             <div
               key={attempt.id}
@@ -104,9 +127,13 @@ const CharactersGrid = ({ attempts, character }: CharactersGridProps) => {
                 {capitalize(attempt.species)}
               </div>
               <div
+                ref={(el) => {
+                  elementRefs.current[attempt.id] = el;
+                }}
                 className={clsx(
-                  "rounded border-2 w-26 mx-auto flex flex-col justify-center items-center",
-                  "animate-flip-up animate-duration-300 animate-delay-[800ms] animate-ease-in-out",
+                  "rounded border-2 w-26 mx-auto flex flex-col items-center",
+                  "animate-flip-up animate-duration-300 animate-delay-[800ms] animate-ease-in-out overflow-scroll",
+                  hasOverflow ? "justify-start" : "justify-center",
                   {
                     "bg-correct": teamStatus === "correct",
                     "bg-partial": teamStatus === "partial",
