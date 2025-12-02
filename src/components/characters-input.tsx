@@ -16,7 +16,7 @@ const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Debounce the input value to reduce queries
-  const debouncedQuery = useDebounce(inputValue, 300);
+  const debouncedQuery = useDebounce(inputValue, 150);
 
   // Perform search when debounced value changes
   useEffect(() => {
