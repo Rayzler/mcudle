@@ -27,10 +27,10 @@ export const ImageClue = ({
         <img
           src={imageUrl || ""}
           alt={characterName}
-          className={`w-full h-full object-cover blur-[${GAME_CONFIG.IMAGE_BLUR_INTENSITY}px]`}
           style={{
             transformOrigin: `${position.x}% ${position.y}%`,
-            transform: `scale(${GAME_CONFIG.IMAGE_ZOOM_SCALE})`
+            transform: `scale(${GAME_CONFIG.IMAGE_ZOOM_SCALE})`,
+            filter: `blur(${GAME_CONFIG.IMAGE_BLUR_INTENSITY}px)`
           }}
         />
       </div>

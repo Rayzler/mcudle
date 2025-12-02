@@ -8,9 +8,14 @@ import { useEffect, useState } from "react";
 type Props = {
   selectedIds?: string[];
   onCharacterSelected: (character: Character) => void;
+  disabled?: boolean;
 };
 
-const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
+const CharactersInput = ({
+  onCharacterSelected,
+  selectedIds,
+  disabled = false
+}: Props) => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -45,8 +50,14 @@ const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
   }, [debouncedQuery, selectedIds]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
+
     const query = event.target.value;
     setInputValue(query);
+    // Clear characters immediately when user clears the input
+    if (!query.trim()) {
+      setCharacters([]);
+    }
   };
 
   const handleCharacterSelected = (character: Character) => {
@@ -63,7 +74,10 @@ const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
         name="query"
         autoComplete="off"
         value={inputValue}
-        className="peer bg-gradient-to-b from-neutral-900 to-neutral-800 w-full border-2 rounded-md px-5 py-3 text-white outline-0 box-reflect placeholder:text-neutral-500 focus:bg-gradient-to-t focus:animate-red-glow"
+        disabled={disabled}
+        className={`peer bg-gradient-to-b from-neutral-900 to-neutral-800 w-full border-2 rounded-md px-5 py-3 text-white outline-0 box-reflect placeholder:text-neutral-500 focus:bg-gradient-to-t focus:animate-red-glow ${
+          disabled ? "opacity-50 cursor-not-allowed" : ""
+        }`}
         onChange={handleInputChange}
       />
       {characters.length > 0 && (
