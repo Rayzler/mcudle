@@ -2,7 +2,7 @@
 
 import { Character } from "@/types/prisma";
 import CharactersInput from "./characters-input";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import confetti from "canvas-confetti";
 import CharactersGrid from "./characters-grid";
 import { BiSolidQuoteLeft } from "react-icons/bi";
@@ -22,6 +22,12 @@ const ClassicChallenge = ({ character }: Props) => {
   const [attempts, setAttempts] = useState<Character[]>([]);
   const [showQuote, setShowQuote] = useState(false);
 
+  // Memoize quote selection to ensure it doesn't change on every render
+  const quoteClue = useMemo(
+    () => getDailyRandomElement(character.quote?.map((q) => q.text) || []),
+    [character.quote]
+  );
+
   const checkCharacter = (selectedCharacter: Character) => {
     if (selectedCharacter.id === character?.id) {
       setTimeout(win, 1800);
@@ -29,10 +35,6 @@ const ClassicChallenge = ({ character }: Props) => {
       console.log("Incorrect! Try again.");
     }
     setAttempts((prevAttempts) => [selectedCharacter, ...prevAttempts]);
-  };
-
-  const getQuoteClue = () => {
-    return getDailyRandomElement(character.quote?.map((q) => q.text) || []);
   };
 
   const win = () => {
@@ -72,7 +74,7 @@ const ClassicChallenge = ({ character }: Props) => {
           <p
             className={`${shareTech.className} text-xl text-center mt-4 uppercase animate-flip-up animate-duration-200`}
           >
-            "{getQuoteClue()}"
+            "{quoteClue}"
           </p>
         )}
       </div>

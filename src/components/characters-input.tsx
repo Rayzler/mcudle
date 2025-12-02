@@ -1,8 +1,9 @@
 "use client";
 
 import { getCharactersByQuery } from "@/actions/characters";
+import { useDebounce } from "@/hooks/useDebounce";
 import { Character } from "@/types/prisma";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   selectedIds?: string[];
@@ -12,17 +13,40 @@ type Props = {
 const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    setInputValue(query);
-    if (!query) {
+  // Debounce the input value to reduce queries
+  const debouncedQuery = useDebounce(inputValue, 300);
+
+  // Perform search when debounced value changes
+  useEffect(() => {
+    if (!debouncedQuery) {
       setCharacters([]);
       return;
     }
 
-    const response = await getCharactersByQuery(query, selectedIds);
-    setCharacters(response);
+    const performSearch = async () => {
+      try {
+        setIsLoading(true);
+        const response = await getCharactersByQuery(
+          debouncedQuery,
+          selectedIds
+        );
+        setCharacters(response);
+      } catch (error) {
+        console.error("Search error:", error);
+        setCharacters([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    performSearch();
+  }, [debouncedQuery, selectedIds]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    setInputValue(query);
   };
 
   const handleCharacterSelected = (character: Character) => {
@@ -40,15 +64,17 @@ const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
         autoComplete="off"
         value={inputValue}
         className="peer bg-gradient-to-b from-neutral-900 to-neutral-800 w-full border-2 rounded-md px-5 py-3 text-white outline-0 box-reflect placeholder:text-neutral-500 focus:bg-gradient-to-t focus:animate-red-glow"
-        onChange={handleSearch}
+        onChange={handleInputChange}
+        disabled={isLoading}
       />
       {characters.length > 0 && (
         <ul className="mt-2.5 bg-neutral-800 rounded-md max-h-60 overflow-y-auto box-reflect-mask w-full absolute z-20">
           {characters.map((character) => (
             <li key={character.id}>
               <button
-                className="w-full text-left px-4 py-3 hover:bg-neutral-700 flex items-center gap-2"
+                className="w-full text-left px-4 py-3 hover:bg-neutral-700 flex items-center gap-2 disabled:opacity-50"
                 onClick={() => handleCharacterSelected(character)}
+                disabled={isLoading}
               >
                 <img
                   src={
