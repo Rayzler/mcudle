@@ -9,21 +9,28 @@ interface ClueButtonsProps {
   showImage: boolean;
   onQuoteToggle: () => void;
   onImageToggle: () => void;
+  enableAll?: boolean;
 }
 
 /**
  * Renders the quote and image clue buttons
  * Buttons are disabled until the required number of attempts is reached
+ * Unless enableAll is true (when player wins)
  */
 export const ClueButtons = ({
   attemptsCount,
   showQuote,
   showImage,
   onQuoteToggle,
-  onImageToggle
+  onImageToggle,
+  enableAll = false
 }: ClueButtonsProps) => {
-  const quoteDisabled = attemptsCount < CLUE_CONFIG.QUOTE.triesUntil;
-  const imageDisabled = attemptsCount < CLUE_CONFIG.IMAGE.triesUntil;
+  const quoteDisabled = enableAll
+    ? false
+    : attemptsCount < CLUE_CONFIG.QUOTE.triesUntil;
+  const imageDisabled = enableAll
+    ? false
+    : attemptsCount < CLUE_CONFIG.IMAGE.triesUntil;
 
   return (
     <div className="flex justify-evenly">

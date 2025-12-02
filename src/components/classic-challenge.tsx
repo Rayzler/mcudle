@@ -2,12 +2,13 @@
 
 import { Character } from "@/types/prisma";
 import CharactersInput from "./characters-input";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import confetti from "canvas-confetti";
 import CharactersGrid from "./characters-grid";
 import ClueButtons from "./ClueButtons";
-import QuoteClue from "./QuoteClue";
-import ImageClue from "./ImageClue";
+import QuoteClue from "./quote-clue";
+import ImageClue from "./image-clue";
+import WinCard from "./win-card";
 import { getDailyRandomElement } from "@/lib/dateUtils";
 import { useImageZoomPosition } from "@/hooks/useImageZoomPosition";
 import { GAME_CONFIG, GAME_LABELS } from "@/constants/gameConfig";
@@ -27,6 +28,7 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
   const [showQuote, setShowQuote] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [hasWon, setHasWon] = useState(false);
+  const winCardRef = useRef<HTMLDivElement>(null);
 
   // Get random position for image zoom using custom hook
   const randomPosition = useImageZoomPosition(character.id);
@@ -53,13 +55,19 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
     }
     setAttempts((prevAttempts) => [selectedCharacter, ...prevAttempts]);
   };
-
   /**
    * Triggers win state and confetti animation
    */
   const win = () => {
     setHasWon(true);
-    confetti({ colors: GAME_CONFIG.CONFETTI_COLORS });
+    // Scroll to win card after a short delay
+    setTimeout(() => {
+      confetti({ colors: GAME_CONFIG.CONFETTI_COLORS });
+      winCardRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }, 100);
   };
 
   return (
@@ -69,13 +77,6 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
           {GAME_LABELS.TITLE}
         </h1>
 
-        {/* Victory message */}
-        {hasWon && (
-          <p className="text-lg text-center text-green-400 mt-2 font-bold animate-bounce">
-            {GAME_LABELS.WIN_MESSAGE}
-          </p>
-        )}
-
         {/* Clue buttons - shown after first attempt */}
         {attempts.length > 0 ? (
           <ClueButtons
@@ -84,6 +85,7 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
             showImage={showImage}
             onQuoteToggle={() => setShowQuote(!showQuote)}
             onImageToggle={() => setShowImage(!showImage)}
+            enableAll={hasWon}
           />
         ) : (
           <p className="text-lg text-center text-gray-300 mt-2">
@@ -107,16 +109,22 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
         />
       </div>
 
-      {/* Character search input - hidden after win */}
-      {!hasWon && (
-        <CharactersInput
-          onCharacterSelected={checkCharacter}
-          selectedIds={attempts.map((a) => a.id)}
-        />
-      )}
+      {/* Character search input - disabled after win */}
+      <CharactersInput
+        onCharacterSelected={checkCharacter}
+        selectedIds={attempts.map((a) => a.id)}
+        disabled={hasWon}
+      />
 
       {/* Results grid showing all attempts */}
       <CharactersGrid attempts={attempts} character={character} />
+
+      {/* Win card - shown when player wins */}
+      {hasWon && (
+        <div ref={winCardRef}>
+          <WinCard character={character} attempts={attempts.length} />
+        </div>
+      )}
 
       {/* Yesterday's character */}
       {lastCharacter && (
