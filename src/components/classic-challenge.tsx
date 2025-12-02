@@ -14,13 +14,14 @@ import { GAME_CONFIG, GAME_LABELS } from "@/constants/gameConfig";
 
 type Props = {
   character: Character;
+  lastCharacter: Character | null;
 };
 
 /**
  * ClassicChallenge - Main game component for the MCU Wordle-like game
  * Handles game state, character checking, and clue display
  */
-export const ClassicChallenge = ({ character }: Props) => {
+export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
   // Game state
   const [attempts, setAttempts] = useState<Character[]>([]);
   const [showQuote, setShowQuote] = useState(false);
@@ -116,6 +117,16 @@ export const ClassicChallenge = ({ character }: Props) => {
 
       {/* Results grid showing all attempts */}
       <CharactersGrid attempts={attempts} character={character} />
+
+      {/* Yesterday's character */}
+      {lastCharacter && (
+        <div className="w-full max-w-xl mt-8 bg-neutral-800/25 backdrop-blur-md p-4 rounded-lg border-2 border-white/50">
+          <p className="text-lg text-center text-white font-semibold">
+            Yesterday's character was:{" "}
+            <span className="text-red-600">{lastCharacter.name}</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 };

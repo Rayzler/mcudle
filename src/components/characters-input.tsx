@@ -20,7 +20,7 @@ const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
 
   // Perform search when debounced value changes
   useEffect(() => {
-    if (!debouncedQuery) {
+    if (!debouncedQuery || !inputValue.trim()) {
       setCharacters([]);
       return;
     }
