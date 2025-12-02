@@ -1,12 +1,19 @@
-import { getDailyChallenge } from "@/actions/dailyChallenge";
+import {
+  getDailyChallenge,
+  getLastDailyChallenge
+} from "@/actions/dailyChallenge";
 import ClassicChallenge from "@/components/classic-challenge";
 
 const ClassicModePage = async () => {
   const { character } = await getDailyChallenge();
+  const lastChallenge = await getLastDailyChallenge();
 
   return (
     <>
-      <ClassicChallenge character={character} />
+      <ClassicChallenge
+        character={character}
+        lastCharacter={lastChallenge?.character || null}
+      />
     </>
   );
 };

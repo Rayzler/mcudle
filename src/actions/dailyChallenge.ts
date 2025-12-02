@@ -36,6 +36,41 @@ export const getDailyChallenge = async (): Promise<DailyChallenge> => {
   }
 };
 
+export const getLastDailyChallenge =
+  async (): Promise<DailyChallenge | null> => {
+    try {
+      const today = getUTCDate();
+
+      // Create a date for yesterday
+      const yesterday = new Date(today);
+      yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+
+      const challenge = await prisma.dailyChallenge.findUnique({
+        where: {
+          date: yesterday
+        },
+        include: {
+          character: {
+            include: {
+              teams: true,
+              quote: true
+            }
+          },
+          posterCharacter: true,
+          posterMovie: true,
+          emojiCharacter: true,
+          quote: true,
+          item: true
+        }
+      });
+
+      return challenge;
+    } catch (error) {
+      console.error("Error fetching last daily challenge:", error);
+      throw new Error("Failed to load last daily challenge");
+    }
+  };
+
 /**
  * Creates a new daily challenge with randomly selected IDs efficiently
  * Uses direct SQL to select random records without loading all data into memory
