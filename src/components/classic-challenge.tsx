@@ -5,23 +5,30 @@ import CharactersInput from "./characters-input";
 import { useState, useMemo } from "react";
 import confetti from "canvas-confetti";
 import CharactersGrid from "./characters-grid";
-import { BiSolidQuoteLeft } from "react-icons/bi";
-import { IoIosImages } from "react-icons/io";
-import ClueButton from "./clue-button";
-import { shareTech } from "@/fonts";
+import ClueButtons from "./ClueButtons";
+import QuoteClue from "./QuoteClue";
+import ImageClue from "./ImageClue";
 import { getDailyRandomElement } from "@/lib/dateUtils";
+import { useImageZoomPosition } from "@/hooks/useImageZoomPosition";
+import { GAME_CONFIG, GAME_LABELS } from "@/constants/gameConfig";
 
 type Props = {
   character: Character;
 };
 
-const triesUntilQuote = 5; // Number of attempts before showing the quote
-const triesUntilImage = 12; // Number of attempts before showing the image
-
-const ClassicChallenge = ({ character }: Props) => {
+/**
+ * ClassicChallenge - Main game component for the MCU Wordle-like game
+ * Handles game state, character checking, and clue display
+ */
+export const ClassicChallenge = ({ character }: Props) => {
+  // Game state
   const [attempts, setAttempts] = useState<Character[]>([]);
   const [showQuote, setShowQuote] = useState(false);
+  const [showImage, setShowImage] = useState(false);
   const [hasWon, setHasWon] = useState(false);
+
+  // Get random position for image zoom using custom hook
+  const randomPosition = useImageZoomPosition(character.id);
 
   // Memoize quote selection to ensure it doesn't change on every render
   const quoteClue = useMemo(
@@ -29,68 +36,85 @@ const ClassicChallenge = ({ character }: Props) => {
     [character.quote]
   );
 
+  // Check if character has quotes available
+  const hasQuotes = (character.quote?.length ?? 0) > 0;
+
+  /**
+   * Checks if selected character matches the target character
+   * If correct, triggers win animation
+   * Adds attempt to history regardless
+   */
   const checkCharacter = (selectedCharacter: Character) => {
     if (selectedCharacter.id === character?.id) {
-      setTimeout(win, 1800);
+      setTimeout(win, GAME_CONFIG.WIN_ANIMATION_DELAY);
     } else {
-      console.log("Incorrect! Try again.");
+      console.log(GAME_LABELS.INCORRECT_MESSAGE);
     }
     setAttempts((prevAttempts) => [selectedCharacter, ...prevAttempts]);
   };
 
+  /**
+   * Triggers win state and confetti animation
+   */
   const win = () => {
     setHasWon(true);
-    confetti({ colors: ["#ff0d0d", "#ffffff", "#b81414"] });
+    confetti({ colors: GAME_CONFIG.CONFETTI_COLORS });
   };
 
   return (
     <div className="flex flex-col items-center gap-5 w-full px-24">
       <div className="bg-neutral-800/25 backdrop-blur-md p-8 pb-7 rounded-lg shadow-lg w-full max-w-xl border-2 border-white/75">
         <h1 className="text-3xl text-center text-white font-bold">
-          Guess today's MCU character!
+          {GAME_LABELS.TITLE}
         </h1>
+
+        {/* Victory message */}
         {hasWon && (
           <p className="text-lg text-center text-green-400 mt-2 font-bold animate-bounce">
-            🎉 You guessed it! Come back tomorrow for a new challenge.
+            {GAME_LABELS.WIN_MESSAGE}
           </p>
         )}
+
+        {/* Clue buttons - shown after first attempt */}
         {attempts.length > 0 ? (
-          <div className="flex justify-evenly">
-            <ClueButton
-              disabled={attempts.length < triesUntilQuote}
-              triesUntilClue={triesUntilQuote - attempts.length}
-              type="Quote"
-              onClick={() => setShowQuote(!showQuote)}
-            >
-              <BiSolidQuoteLeft size={28} />
-            </ClueButton>
-            <ClueButton
-              disabled={attempts.length < triesUntilImage}
-              triesUntilClue={triesUntilImage - attempts.length}
-              type="Image"
-            >
-              <IoIosImages size={28} />
-            </ClueButton>
-          </div>
+          <ClueButtons
+            attemptsCount={attempts.length}
+            showQuote={showQuote}
+            showImage={showImage}
+            onQuoteToggle={() => setShowQuote(!showQuote)}
+            onImageToggle={() => setShowImage(!showImage)}
+          />
         ) : (
           <p className="text-lg text-center text-gray-300 mt-2">
-            Type any character to start.
+            {GAME_LABELS.START_MESSAGE}
           </p>
         )}
-        {showQuote && (
-          <p
-            className={`${shareTech.className} text-xl text-center mt-4 uppercase animate-flip-up animate-duration-200`}
-          >
-            "{quoteClue}"
-          </p>
-        )}
+
+        {/* Quote clue */}
+        <QuoteClue
+          isVisible={showQuote}
+          quote={quoteClue}
+          hasQuotes={hasQuotes}
+        />
+
+        {/* Image clue */}
+        <ImageClue
+          isVisible={showImage}
+          imageUrl={character.imageUrl || null}
+          characterName={character.name}
+          position={randomPosition}
+        />
       </div>
+
+      {/* Character search input - hidden after win */}
       {!hasWon && (
         <CharactersInput
           onCharacterSelected={checkCharacter}
           selectedIds={attempts.map((a) => a.id)}
         />
       )}
+
+      {/* Results grid showing all attempts */}
       <CharactersGrid attempts={attempts} character={character} />
     </div>
   );
