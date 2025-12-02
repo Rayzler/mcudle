@@ -21,6 +21,7 @@ const triesUntilImage = 12; // Number of attempts before showing the image
 const ClassicChallenge = ({ character }: Props) => {
   const [attempts, setAttempts] = useState<Character[]>([]);
   const [showQuote, setShowQuote] = useState(false);
+  const [hasWon, setHasWon] = useState(false);
 
   // Memoize quote selection to ensure it doesn't change on every render
   const quoteClue = useMemo(
@@ -38,6 +39,7 @@ const ClassicChallenge = ({ character }: Props) => {
   };
 
   const win = () => {
+    setHasWon(true);
     confetti({ colors: ["#ff0d0d", "#ffffff", "#b81414"] });
   };
 
@@ -47,6 +49,11 @@ const ClassicChallenge = ({ character }: Props) => {
         <h1 className="text-3xl text-center text-white font-bold">
           Guess today's MCU character!
         </h1>
+        {hasWon && (
+          <p className="text-lg text-center text-green-400 mt-2 font-bold animate-bounce">
+            🎉 You guessed it! Come back tomorrow for a new challenge.
+          </p>
+        )}
         {attempts.length > 0 ? (
           <div className="flex justify-evenly">
             <ClueButton
@@ -78,10 +85,12 @@ const ClassicChallenge = ({ character }: Props) => {
           </p>
         )}
       </div>
-      <CharactersInput
-        onCharacterSelected={checkCharacter}
-        selectedIds={attempts.map((a) => a.id)}
-      />
+      {!hasWon && (
+        <CharactersInput
+          onCharacterSelected={checkCharacter}
+          selectedIds={attempts.map((a) => a.id)}
+        />
+      )}
       <CharactersGrid attempts={attempts} character={character} />
     </div>
   );

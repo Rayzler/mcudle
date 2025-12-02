@@ -65,7 +65,6 @@ const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
         value={inputValue}
         className="peer bg-gradient-to-b from-neutral-900 to-neutral-800 w-full border-2 rounded-md px-5 py-3 text-white outline-0 box-reflect placeholder:text-neutral-500 focus:bg-gradient-to-t focus:animate-red-glow"
         onChange={handleInputChange}
-        disabled={isLoading}
       />
       {characters.length > 0 && (
         <ul className="mt-2.5 bg-neutral-800 rounded-md max-h-60 overflow-y-auto box-reflect-mask w-full absolute z-20">
@@ -74,7 +73,6 @@ const CharactersInput = ({ onCharacterSelected, selectedIds }: Props) => {
               <button
                 className="w-full text-left px-4 py-3 hover:bg-neutral-700 flex items-center gap-2 disabled:opacity-50"
                 onClick={() => handleCharacterSelected(character)}
-                disabled={isLoading}
               >
                 <img
                   src={
