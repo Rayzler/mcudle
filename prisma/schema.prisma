@@ -28,9 +28,9 @@ model Character {
   description     String?
   emojis          String? @map("emojis")
   imageUrl        String  @map("image_url")
-  actorId         String?  @map("actor_id")
+  actorId         String? @map("actor_id")
 
-  actor                 Actor?            @relation(fields: [actorId], references: [id])
+  actor                 Actor?           @relation(fields: [actorId], references: [id])
   movies                Movie[]          @relation("character_movie")
   teams                 Team[]           @relation("character_team")
   quote                 Quote[]
@@ -77,6 +77,7 @@ model Quote {
   character      Character        @relation(fields: [characterId], references: [id])
   dailyChallenge DailyChallenge[]
 
+  @@index([characterId])
   @@map("quotes")
 }
 
@@ -90,6 +91,7 @@ model Item {
   character      Character        @relation(fields: [characterId], references: [id])
   dailyChallenge DailyChallenge[]
 
+  @@index([characterId])
   @@map("items")
 }
 
@@ -122,5 +124,11 @@ model DailyChallenge {
   item            Item      @relation(fields: [itemId], references: [id])
 
   @@index([date])
+  @@index([classicCharacterId])
+  @@index([posterCharacterId])
+  @@index([posterMovieId])
+  @@index([emojiCharacterId])
+  @@index([quoteId])
+  @@index([itemId])
   @@map("daily_challenges")
 }
