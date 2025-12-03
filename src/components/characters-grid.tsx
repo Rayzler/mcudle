@@ -9,10 +9,11 @@ import { useCallback, useRef, useLayoutEffect, useState, memo } from "react";
 type CharactersGridProps = {
   attempts: Character[];
   character: Character;
+  newAttemptId?: string; // ID of the most recent attempt to animate
 };
 
 const CharactersGrid = memo(
-  ({ attempts, character }: CharactersGridProps) => {
+  ({ attempts, character, newAttemptId }: CharactersGridProps) => {
     const [overflowStates, setOverflowStates] = useState<{
       [key: string]: boolean;
     }>({});
@@ -87,6 +88,7 @@ const CharactersGrid = memo(
           {attempts.map((attempt) => {
             const teamStatus = checkTeamStatus(attempt);
             const hasOverflow = overflowStates[attempt.id] || false;
+            const isNewAttempt = attempt.id === newAttemptId;
 
             return (
               <div
@@ -96,9 +98,11 @@ const CharactersGrid = memo(
                 <div
                   className={clsx(
                     "rounded border-2 bg-dark-red w-20 aspect-square mx-auto flex flex-col justify-center items-center",
-                    attempt.id !== character.id
-                      ? "bg-incorrect animate-shake animate-duration-200 animate-delay-[1800ms] animate-ease-in-out"
-                      : "bg-correct"
+                    attempt.id !== character.id &&
+                      isNewAttempt &&
+                      "animate-shake animate-duration-200 animate-delay-[1800ms] animate-ease-in-out",
+                    attempt.id === character.id && "bg-correct",
+                    attempt.id !== character.id && "bg-incorrect"
                   )}
                 >
                   <img
@@ -110,7 +114,8 @@ const CharactersGrid = memo(
                 <div
                   className={clsx(
                     "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center",
-                    "animate-flip-up animate-duration-300 animate-delay-100 animate-ease-in-out",
+                    isNewAttempt &&
+                      "animate-flip-up animate-duration-300 animate-delay-100 animate-ease-in-out",
                     attempt.gender === character.gender
                       ? "bg-correct"
                       : "bg-incorrect"
@@ -121,7 +126,8 @@ const CharactersGrid = memo(
                 <div
                   className={clsx(
                     "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center",
-                    "animate-flip-up animate-duration-300 animate-delay-[400ms] animate-ease-in-out",
+                    isNewAttempt &&
+                      "animate-flip-up animate-duration-300 animate-delay-[400ms] animate-ease-in-out",
                     attempt.species === character.species
                       ? "bg-correct"
                       : "bg-incorrect"
@@ -135,7 +141,9 @@ const CharactersGrid = memo(
                   }}
                   className={clsx(
                     "rounded border-2 w-20 mx-auto flex flex-col items-center",
-                    "animate-flip-up animate-duration-300 animate-delay-[800ms] animate-ease-in-out overflow-scroll",
+                    isNewAttempt &&
+                      "animate-flip-up animate-duration-300 animate-delay-[800ms] animate-ease-in-out",
+                    "overflow-scroll",
                     hasOverflow ? "justify-start" : "justify-center",
                     {
                       "bg-correct": teamStatus === "correct",
@@ -153,7 +161,8 @@ const CharactersGrid = memo(
                 <div
                   className={clsx(
                     "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center",
-                    "animate-flip-up animate-duration-300 animate-delay-[1200ms] animate-ease-in-out",
+                    isNewAttempt &&
+                      "animate-flip-up animate-duration-300 animate-delay-[1200ms] animate-ease-in-out",
                     attempt.status === character.status
                       ? "bg-correct"
                       : "bg-incorrect"
@@ -163,8 +172,9 @@ const CharactersGrid = memo(
                 </div>
                 <div
                   className={clsx(
-                    "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center",
-                    "animate-flip-up animate-duration-300 animate-delay-[1600ms] animate-ease-in-out",
+                    "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center relative",
+                    isNewAttempt &&
+                      "animate-flip-up animate-duration-300 animate-delay-[1600ms] animate-ease-in-out",
                     attempt.firstAppearance === character.firstAppearance
                       ? "bg-correct"
                       : "bg-incorrect"
@@ -189,7 +199,7 @@ const CharactersGrid = memo(
       </div>
     );
   },
-  (prevProps, nextProps) => {
+  (prevProps: CharactersGridProps, nextProps: CharactersGridProps) => {
     // Returns true if props are equal (no re-render needed)
     // Returns false if props are different (re-render needed)
 
@@ -203,6 +213,9 @@ const CharactersGrid = memo(
     for (let i = 0; i < prevProps.attempts.length; i++) {
       if (prevProps.attempts[i].id !== nextProps.attempts[i].id) return false;
     }
+
+    // Compare newAttemptId
+    if (prevProps.newAttemptId !== nextProps.newAttemptId) return false;
 
     // Props are equal, skip re-render
     return true;
