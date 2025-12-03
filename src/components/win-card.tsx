@@ -65,13 +65,15 @@ export const WinCard = ({ character, attempts, onMounted }: WinCardProps) => {
   };
 
   return (
-    <div className="w-full max-w-xl mt-12 mb-8">
-      <div className="bg-gradient-to-b from-green-900/30 to-green-800/20 backdrop-blur-md p-8 rounded-xl border-2 border-green-500/50 shadow-xl">
+    <div className="w-full flex justify-center mt-16 mb-2 px-24">
+      <div className="w-full max-w-xl bg-neutral-800/25 backdrop-blur-md p-8 rounded-lg shadow-lg border-2 border-white/75">
         {/* Victory Title */}
         <div className="text-center mb-6">
           <p className="text-5xl mb-2">🎉</p>
-          <h2 className="text-3xl font-bold text-green-400 mb-2">You Won!</h2>
-          <p className="text-lg text-green-300">
+          <h2 className="text-3xl font-bold bg-clip-text text-correct mb-2 animate-pulse">
+            You Won!
+          </h2>
+          <p className="text-lg text-gray-300">
             {getEncouragementMessage(attempts)}
           </p>
         </div>
@@ -109,16 +111,16 @@ export const WinCard = ({ character, attempts, onMounted }: WinCardProps) => {
         {/* Stats Section */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           {/* Attempts */}
-          <div className="bg-neutral-800/50 rounded-lg p-4 border border-white/20 text-center">
-            <p className="text-3xl font-bold text-cyan-400 mb-1">{attempts}</p>
+          <div className="bg-neutral-800/50 rounded-lg p-4 border border-red-600/50 text-center shadow-lg shadow-red-600/20">
+            <p className="text-3xl font-bold text-red-600 mb-1">{attempts}</p>
             <p className="text-xs text-gray-400 uppercase tracking-wider">
               {attempts === 1 ? "Attempt" : "Attempts"}
             </p>
           </div>
 
           {/* Accuracy */}
-          <div className="bg-neutral-800/50 rounded-lg p-4 border border-white/20 text-center">
-            <p className="text-3xl font-bold text-purple-400 mb-1">
+          <div className="bg-neutral-800/50 rounded-lg p-4 border border-yellow-600/50 text-center shadow-lg shadow-yellow-600/20">
+            <p className="text-3xl font-bold text-yellow-500 mb-1">
               {attempts === 1 ? "100%" : `${Math.round((1 / attempts) * 100)}%`}
             </p>
             <p className="text-xs text-gray-400 uppercase tracking-wider">
@@ -140,28 +142,28 @@ export const WinCard = ({ character, attempts, onMounted }: WinCardProps) => {
         )}
 
         {/* Countdown Timer */}
-        <div className="bg-neutral-800/50 rounded-lg p-4 border border-white/20 mb-6">
+        <div className="bg-neutral-800/50 rounded-lg p-4 border border-red-600/30 shadow-lg shadow-red-600/10 mb-6">
           <p className="text-xs text-gray-400 uppercase tracking-wider mb-3">
             Next Challenge In
           </p>
           <div className="grid grid-cols-3 gap-3 text-center">
             <div>
-              <p className="text-2xl font-bold text-cyan-400">
+              <p className="text-2xl font-bold text-red-600">
                 {String(timeLeft.hours).padStart(2, "0")}
               </p>
-              <p className="text-xs text-gray-500">Hours</p>
+              <p className="text-xs text-gray-400">Hours</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-cyan-400">
+              <p className="text-2xl font-bold text-yellow-500">
                 {String(timeLeft.minutes).padStart(2, "0")}
               </p>
-              <p className="text-xs text-gray-500">Minutes</p>
+              <p className="text-xs text-gray-400">Minutes</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-cyan-400">
+              <p className="text-2xl font-bold text-orange-500">
                 {String(timeLeft.seconds).padStart(2, "0")}
               </p>
-              <p className="text-xs text-gray-500">Seconds</p>
+              <p className="text-xs text-gray-400">Seconds</p>
             </div>
           </div>
         </div>

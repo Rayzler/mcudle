@@ -3,6 +3,7 @@ import {
   getLastDailyChallenge
 } from "@/actions/dailyChallenge";
 import ClassicChallenge from "@/components/classic-challenge";
+import FloatingNavbar from "@/components/floating-navbar";
 
 const ClassicModePage = async () => {
   const { character } = await getDailyChallenge();
@@ -10,6 +11,7 @@ const ClassicModePage = async () => {
 
   return (
     <>
+      <FloatingNavbar />
       <ClassicChallenge
         character={character}
         lastCharacter={lastChallenge?.character || null}

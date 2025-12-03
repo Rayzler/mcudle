@@ -71,7 +71,7 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-5 w-full px-24">
+    <div className="flex flex-col items-center gap-5 w-full grow px-24">
       <div className="bg-neutral-800/25 backdrop-blur-md p-8 pb-7 rounded-lg shadow-lg w-full max-w-xl border-2 border-white/75">
         <h1 className="text-3xl text-center text-white font-bold">
           {GAME_LABELS.TITLE}
@@ -83,8 +83,14 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
             attemptsCount={attempts.length}
             showQuote={showQuote}
             showImage={showImage}
-            onQuoteToggle={() => setShowQuote(!showQuote)}
-            onImageToggle={() => setShowImage(!showImage)}
+            onQuoteToggle={() => {
+              setShowQuote(!showQuote);
+              if (!showQuote) setShowImage(false);
+            }}
+            onImageToggle={() => {
+              setShowImage(!showImage);
+              if (!showImage) setShowQuote(false);
+            }}
             enableAll={hasWon}
           />
         ) : (
@@ -116,19 +122,23 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
         disabled={hasWon}
       />
 
-      {/* Results grid showing all attempts */}
-      <CharactersGrid attempts={attempts} character={character} />
+      <div className="grow">
+        {/* Results grid showing all attempts */}
+        {attempts.length > 0 && (
+          <CharactersGrid attempts={attempts} character={character} />
+        )}
 
-      {/* Win card - shown when player wins */}
-      {hasWon && (
-        <div ref={winCardRef}>
-          <WinCard character={character} attempts={attempts.length} />
-        </div>
-      )}
+        {/* Win card - shown when player wins */}
+        {hasWon && (
+          <div ref={winCardRef}>
+            <WinCard character={character} attempts={attempts.length} />
+          </div>
+        )}
+      </div>
 
       {/* Yesterday's character */}
       {lastCharacter && (
-        <div className="w-full max-w-xl mt-8 bg-neutral-800/25 backdrop-blur-md p-4 rounded-lg border-2 border-white/50">
+        <div className="w-full max-w-xl mt-6 bg-neutral-800/25 backdrop-blur-md p-4 rounded-lg border-2 border-white/50">
           <p className="text-lg text-center text-white font-semibold">
             Yesterday's character was:{" "}
             <span className="text-red-600">{lastCharacter.name}</span>

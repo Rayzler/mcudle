@@ -4,7 +4,7 @@ const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
 
 const Footer = () => {
   return (
-    <footer className="flex gap-2 flex-col flex-wrap items-center justify-center mt-16 mb-4">
+    <footer className="flex gap-2 flex-col flex-wrap items-center justify-center mt-2">
       <div className="flex gap-[24px] flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
