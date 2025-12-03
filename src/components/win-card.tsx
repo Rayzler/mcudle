@@ -2,11 +2,14 @@
 
 import { Character } from "@/types/prisma";
 import { useEffect, useState } from "react";
+import { clearGameState } from "@/lib/gameStateService";
+import { GameMode } from "@/constants/enums";
 
 interface WinCardProps {
   character: Character;
   attempts: number;
   onMounted?: () => void;
+  gameMode?: GameMode;
 }
 
 interface TimeLeft {
@@ -19,7 +22,12 @@ interface TimeLeft {
  * WinCard - Displays victory stats and character reveal
  * Shows attempts count, character details, and encouragement message
  */
-export const WinCard = ({ character, attempts, onMounted }: WinCardProps) => {
+export const WinCard = ({
+  character,
+  attempts,
+  onMounted,
+  gameMode = GameMode.CLASSIC
+}: WinCardProps) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     hours: 0,
     minutes: 0,
@@ -47,6 +55,10 @@ export const WinCard = ({ character, attempts, onMounted }: WinCardProps) => {
           minutes: Math.floor((difference / 1000 / 60) % 60),
           seconds: Math.floor((difference / 1000) % 60)
         });
+      } else {
+        // Time is up - clear game state and reload
+        clearGameState(gameMode);
+        window.location.reload();
       }
     };
 
@@ -54,7 +66,7 @@ export const WinCard = ({ character, attempts, onMounted }: WinCardProps) => {
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [gameMode]);
 
   const getEncouragementMessage = (attempts: number) => {
     if (attempts === 1) return "🎯 Perfect! First try!";

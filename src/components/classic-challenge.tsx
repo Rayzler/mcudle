@@ -145,7 +145,11 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
         {/* Win card - shown when player wins */}
         {hasWon && (
           <div ref={winCardRef}>
-            <WinCard character={character} attempts={attempts.length} />
+            <WinCard
+              character={character}
+              attempts={attempts.length}
+              gameMode={GameMode.CLASSIC}
+            />
           </div>
         )}
       </div>
