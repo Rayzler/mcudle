@@ -12,6 +12,8 @@ import WinCard from "./win-card";
 import { getDailyRandomElement } from "@/lib/dateUtils";
 import { useImageZoomPosition } from "@/hooks/useImageZoomPosition";
 import { GAME_CONFIG, GAME_LABELS } from "@/constants/gameConfig";
+import { updateStreakOnWin } from "@/lib/streakService";
+import { GameMode } from "@/constants/enums";
 
 type Props = {
   character: Character;
@@ -60,6 +62,8 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
    */
   const win = () => {
     setHasWon(true);
+    // Update streak in localStorage
+    updateStreakOnWin(GameMode.CLASSIC);
     // Scroll to win card after a short delay
     setTimeout(() => {
       confetti({ colors: GAME_CONFIG.CONFETTI_COLORS });

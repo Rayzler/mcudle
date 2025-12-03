@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { ClueType } from "@/constants/enums";
 
 type ClueButtonProps = {
   children?: React.ReactNode;
@@ -6,7 +7,7 @@ type ClueButtonProps = {
   isActive?: boolean;
   onClick?: () => void;
   triesUntilClue?: number;
-  type?: "Quote" | "Image";
+  type?: ClueType;
 };
 
 const ClueButton = ({
