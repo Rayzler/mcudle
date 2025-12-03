@@ -18,8 +18,6 @@ export function useDebounce<T>(value: T, delay: number = 300): T {
   useEffect(() => {
     // Set up the timeout
     const handler = setTimeout(() => {
-      console.log("debouncedValue:", debouncedValue);
-      console.log("Debounced value updated:", value);
       setDebouncedValue(value);
     }, delay);
 

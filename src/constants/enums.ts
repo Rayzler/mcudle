@@ -19,6 +19,33 @@ export enum ClueType {
 }
 
 /**
+ * Game State Key Enum - Storage keys for game state by mode
+ */
+export enum GameStateKey {
+  CLASSIC_STATE = "mcu-dle-game-state-classic",
+  MOVIE_STATE = "mcu-dle-game-state-movie",
+  IMAGE_STATE = "mcu-dle-game-state-image",
+  QUOTE_STATE = "mcu-dle-game-state-quote",
+  ITEM_STATE = "mcu-dle-game-state-item",
+  EMOJI_STATE = "mcu-dle-game-state-emoji"
+}
+
+/**
+ * Helper function to get game state key for a game mode
+ */
+export const getGameStateKey = (mode: GameMode): GameStateKey => {
+  const keyMap: Record<GameMode, GameStateKey> = {
+    [GameMode.CLASSIC]: GameStateKey.CLASSIC_STATE,
+    [GameMode.MOVIE]: GameStateKey.MOVIE_STATE,
+    [GameMode.IMAGE]: GameStateKey.IMAGE_STATE,
+    [GameMode.QUOTE]: GameStateKey.QUOTE_STATE,
+    [GameMode.ITEM]: GameStateKey.ITEM_STATE,
+    [GameMode.EMOJI]: GameStateKey.EMOJI_STATE
+  };
+  return keyMap[mode];
+};
+
+/**
  * Helper function to get all game modes
  */
 export const getAllGameModes = (): GameMode[] => {

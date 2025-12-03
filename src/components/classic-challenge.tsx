@@ -2,7 +2,7 @@
 
 import { Character } from "@/types/prisma";
 import CharactersInput from "./characters-input";
-import { useState, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import confetti from "canvas-confetti";
 import CharactersGrid from "./characters-grid";
 import ClueButtons from "./ClueButtons";
@@ -11,6 +11,7 @@ import ImageClue from "./image-clue";
 import WinCard from "./win-card";
 import { getDailyRandomElement } from "@/lib/dateUtils";
 import { useImageZoomPosition } from "@/hooks/useImageZoomPosition";
+import { useGameState } from "@/hooks/useGameState";
 import { GAME_CONFIG, GAME_LABELS } from "@/constants/gameConfig";
 import { updateStreakOnWin } from "@/lib/streakService";
 import { GameMode } from "@/constants/enums";
@@ -25,11 +26,19 @@ type Props = {
  * Handles game state, character checking, and clue display
  */
 export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
-  // Game state
-  const [attempts, setAttempts] = useState<Character[]>([]);
-  const [showQuote, setShowQuote] = useState(false);
-  const [showImage, setShowImage] = useState(false);
-  const [hasWon, setHasWon] = useState(false);
+  // Use game state hook
+  const {
+    attempts,
+    showQuote,
+    showImage,
+    hasWon,
+    initialAttemptsCount,
+    addAttempt,
+    toggleQuote,
+    toggleImage,
+    win
+  } = useGameState(GameMode.CLASSIC, character.id);
+
   const winCardRef = useRef<HTMLDivElement>(null);
 
   // Get random position for image zoom using custom hook
@@ -51,20 +60,19 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
    */
   const checkCharacter = (selectedCharacter: Character) => {
     if (selectedCharacter.id === character?.id) {
-      setTimeout(win, GAME_CONFIG.WIN_ANIMATION_DELAY);
+      setTimeout(() => handleWin(), GAME_CONFIG.WIN_ANIMATION_DELAY);
     } else {
       console.log(GAME_LABELS.INCORRECT_MESSAGE);
     }
-    setAttempts((prevAttempts) => [selectedCharacter, ...prevAttempts]);
+    addAttempt(selectedCharacter);
   };
+
   /**
    * Triggers win state and confetti animation
    */
-  const win = () => {
-    setHasWon(true);
-    // Update streak in localStorage
+  const handleWin = () => {
+    win();
     updateStreakOnWin(GameMode.CLASSIC);
-    // Scroll to win card after a short delay
     setTimeout(() => {
       confetti({ colors: GAME_CONFIG.CONFETTI_COLORS });
       winCardRef.current?.scrollIntoView({
@@ -87,14 +95,8 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
             attemptsCount={attempts.length}
             showQuote={showQuote}
             showImage={showImage}
-            onQuoteToggle={() => {
-              setShowQuote(!showQuote);
-              if (!showQuote) setShowImage(false);
-            }}
-            onImageToggle={() => {
-              setShowImage(!showImage);
-              if (!showImage) setShowQuote(false);
-            }}
+            onQuoteToggle={toggleQuote}
+            onImageToggle={toggleImage}
             enableAll={hasWon}
           />
         ) : (
@@ -129,7 +131,15 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
       <div className="grow">
         {/* Results grid showing all attempts */}
         {attempts.length > 0 && (
-          <CharactersGrid attempts={attempts} character={character} />
+          <CharactersGrid
+            attempts={attempts}
+            character={character}
+            newAttemptId={
+              attempts.length > initialAttemptsCount
+                ? attempts[0]?.id
+                : undefined
+            }
+          />
         )}
 
         {/* Win card - shown when player wins */}
