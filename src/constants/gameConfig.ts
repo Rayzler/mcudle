@@ -24,13 +24,15 @@ export const GAME_LABELS = {
 } as const;
 
 // Clue configuration
+import { ClueType } from "./enums";
+
 export const CLUE_CONFIG = {
   QUOTE: {
-    type: "Quote" as const,
+    type: ClueType.QUOTE,
     triesUntil: GAME_CONFIG.TRIES_UNTIL_QUOTE
   },
   IMAGE: {
-    type: "Image" as const,
+    type: ClueType.IMAGE,
     triesUntil: GAME_CONFIG.TRIES_UNTIL_IMAGE
   }
 } as const;

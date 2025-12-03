@@ -4,6 +4,7 @@ import {
 } from "@/actions/dailyChallenge";
 import ClassicChallenge from "@/components/classic-challenge";
 import FloatingNavbar from "@/components/floating-navbar";
+import { GameMode } from "@/constants/enums";
 
 const ClassicModePage = async () => {
   const { character } = await getDailyChallenge();
@@ -11,7 +12,7 @@ const ClassicModePage = async () => {
 
   return (
     <>
-      <FloatingNavbar />
+      <FloatingNavbar gameMode={GameMode.CLASSIC} />
       <ClassicChallenge
         character={character}
         lastCharacter={lastChallenge?.character || null}
