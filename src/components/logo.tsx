@@ -8,7 +8,7 @@ const Logo = () => {
         alt="MCU-DLE logo"
         width={275}
         height={98}
-        className="box-reflect mb-6"
+        className="box-reflect"
       />
     </Link>
   );

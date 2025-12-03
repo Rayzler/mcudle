@@ -27,8 +27,8 @@ export default function RootLayout({
             className="object-cover w-full h-full -z-10 grayscale opacity-5"
           />
         </div>
-        <div className="grid grid-rows-[1fr_20px] items-center justify-items-center min-h-screen p-8 pt-16 gap-8">
-          <main className="flex flex-col gap-5 justify-start items-center w-full h-full">
+        <div className="flex flex-col items-center justify-items-center min-h-screen px-8 pt-10 pb-4 gap-8">
+          <main className="flex flex-col gap-8 justify-start items-center w-full h-full grow">
             <Logo />
             {children}
           </main>

@@ -67,7 +67,7 @@ const CharactersInput = ({
   };
 
   return (
-    <div className="w-96 relative">
+    <div className="max-w-md relative w-full mx-auto">
       <input
         type="text"
         placeholder="Type character name..."

@@ -36,6 +36,7 @@ export const ClueButtons = ({
     <div className="flex justify-evenly">
       <ClueButton
         disabled={quoteDisabled}
+        isActive={showQuote}
         triesUntilClue={
           quoteDisabled
             ? CLUE_CONFIG.QUOTE.triesUntil - attemptsCount
@@ -48,6 +49,7 @@ export const ClueButtons = ({
       </ClueButton>
       <ClueButton
         disabled={imageDisabled}
+        isActive={showImage}
         triesUntilClue={
           imageDisabled
             ? CLUE_CONFIG.IMAGE.triesUntil - attemptsCount

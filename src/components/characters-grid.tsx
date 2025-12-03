@@ -62,7 +62,7 @@ const CharactersGrid = memo(
     });
 
     return (
-      <div className="w-full mt-12 mb-12 max-w-[840px] flex flex-col gap-2">
+      <div className="w-full my-8 max-w-[620px] flex flex-col gap-2">
         <div className="grid grid-cols-6 gap-2 text-xl text-center uppercase">
           <p className="border-b-2 border-white flex items-center justify-center">
             Character
@@ -91,11 +91,11 @@ const CharactersGrid = memo(
             return (
               <div
                 key={attempt.id}
-                className="grid grid-cols-6 gap-2 text-center h-26 justify-center"
+                className="grid grid-cols-6 gap-2 text-center h-20 justify-center text-sm"
               >
                 <div
                   className={clsx(
-                    "rounded border-2 bg-dark-red w-26 aspect-square mx-auto flex flex-col justify-center items-center",
+                    "rounded border-2 bg-dark-red w-20 aspect-square mx-auto flex flex-col justify-center items-center",
                     attempt.id !== character.id
                       ? "bg-incorrect animate-shake animate-duration-200 animate-delay-[1800ms] animate-ease-in-out"
                       : "bg-correct"
@@ -109,7 +109,7 @@ const CharactersGrid = memo(
                 </div>
                 <div
                   className={clsx(
-                    "rounded border-2 w-26 mx-auto flex flex-col justify-center items-center",
+                    "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center",
                     "animate-flip-up animate-duration-300 animate-delay-100 animate-ease-in-out",
                     attempt.gender === character.gender
                       ? "bg-correct"
@@ -120,7 +120,7 @@ const CharactersGrid = memo(
                 </div>
                 <div
                   className={clsx(
-                    "rounded border-2 w-26 mx-auto flex flex-col justify-center items-center",
+                    "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center",
                     "animate-flip-up animate-duration-300 animate-delay-[400ms] animate-ease-in-out",
                     attempt.species === character.species
                       ? "bg-correct"
@@ -134,7 +134,7 @@ const CharactersGrid = memo(
                     elementRefs.current[attempt.id] = el;
                   }}
                   className={clsx(
-                    "rounded border-2 w-26 mx-auto flex flex-col items-center",
+                    "rounded border-2 w-20 mx-auto flex flex-col items-center",
                     "animate-flip-up animate-duration-300 animate-delay-[800ms] animate-ease-in-out overflow-scroll",
                     hasOverflow ? "justify-start" : "justify-center",
                     {
@@ -152,7 +152,7 @@ const CharactersGrid = memo(
                 </div>
                 <div
                   className={clsx(
-                    "rounded border-2 w-26 mx-auto flex flex-col justify-center items-center",
+                    "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center",
                     "animate-flip-up animate-duration-300 animate-delay-[1200ms] animate-ease-in-out",
                     attempt.status === character.status
                       ? "bg-correct"
@@ -163,7 +163,7 @@ const CharactersGrid = memo(
                 </div>
                 <div
                   className={clsx(
-                    "rounded border-2 w-26 mx-auto flex flex-col justify-center items-center",
+                    "rounded border-2 w-20 mx-auto flex flex-col justify-center items-center",
                     "animate-flip-up animate-duration-300 animate-delay-[1600ms] animate-ease-in-out",
                     attempt.firstAppearance === character.firstAppearance
                       ? "bg-correct"
