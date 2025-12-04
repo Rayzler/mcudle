@@ -5,7 +5,7 @@ import CharactersInput from "../characters-input";
 import { useMemo, useRef } from "react";
 import confetti from "canvas-confetti";
 import CharactersGrid from "../characters-grid";
-import ClueButtons from "../ClueButtons";
+import ClueButtons from "../clue-buttons";
 import QuoteClue from "../quote-clue";
 import ImageClue from "../image-clue";
 import WinCard from "../win-card";

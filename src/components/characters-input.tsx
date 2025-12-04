@@ -88,10 +88,7 @@ const CharactersInput = ({
     const performSearch = async () => {
       try {
         console.log(`[SEARCH] Querying server for: "${currentQuery}"`);
-        const response = await getCharactersByQuery(
-          currentQuery,
-          selectedIds
-        );
+        const response = await getCharactersByQuery(currentQuery, selectedIds);
 
         // Only update UI if this is still the latest query
         if (latestQueryRef.current === currentQuery) {
@@ -157,27 +154,35 @@ const CharactersInput = ({
         }`}
         onChange={handleInputChange}
       />
-      {characters.length > 0 && (
-        <ul className="mt-2.5 bg-neutral-800 rounded-md max-h-60 overflow-y-auto box-reflect-mask w-full absolute z-20">
-          {characters.map((character) => (
-            <li key={character.id}>
-              <button
-                className="w-full text-left px-4 py-3 hover:bg-neutral-700 flex items-center gap-2 disabled:opacity-50"
-                onClick={() => handleCharacterSelected(character)}
-              >
-                <img
-                  src={
-                    character.imageUrl ||
-                    "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-                  }
-                  alt={character.name}
-                  className="w-10 h-10 aspect-square object-cover object-top"
-                />
-                {character.name}
-              </button>
-            </li>
-          ))}
-        </ul>
+      {(characters.length > 0 || isLoading) && (
+        <div className="mt-2.5 bg-neutral-800 rounded-md max-h-60 overflow-y-auto box-reflect-mask w-full absolute z-20">
+          {isLoading && characters.length === 0 ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-6 w-6 border-2 border-neutral-400 border-t-red-500"></div>
+            </div>
+          ) : (
+            <ul>
+              {characters.map((character) => (
+                <li key={character.id}>
+                  <button
+                    className="w-full text-left px-4 py-3 hover:bg-neutral-700 flex items-center gap-2 disabled:opacity-50"
+                    onClick={() => handleCharacterSelected(character)}
+                  >
+                    <img
+                      src={
+                        character.imageUrl ||
+                        "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+                      }
+                      alt={character.name}
+                      className="w-10 h-10 aspect-square object-cover object-top"
+                    />
+                    {character.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       )}
     </div>
   );
