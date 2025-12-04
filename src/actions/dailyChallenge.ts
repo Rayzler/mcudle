@@ -98,7 +98,7 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
 
     const [randomEmojiCharacterResult] = await prisma.$queryRaw<
       Array<{ id: string }>
-    >`SELECT id FROM characters ORDER BY RANDOM() LIMIT 1`;
+    >`SELECT id FROM characters WHERE emojis IS NOT NULL AND emojis != '' ORDER BY RANDOM() LIMIT 1`;
 
     const [randomMovieResult] = await prisma.$queryRaw<Array<{ id: string }>>`
       SELECT id FROM movies ORDER BY RANDOM() LIMIT 1
