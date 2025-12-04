@@ -19,7 +19,7 @@ export const ImageClue = ({
   position
 }: ImageClueProps) => {
   // Don't render if not visible or position not yet calculated
-  if (!position) return null;
+  if (!isVisible || !position) return null;
 
   return (
     <div className="mt-4 flex justify-center">
@@ -27,13 +27,13 @@ export const ImageClue = ({
         <img
           src={imageUrl || ""}
           alt={characterName}
-          className={`w-full h-full object-cover blur-[${GAME_CONFIG.IMAGE_BLUR_INTENSITY}px]`}
           style={
             {
               transformOrigin: `${position.x}% ${position.y}%`,
               transform: `scale(${GAME_CONFIG.IMAGE_ZOOM_SCALE})`,
               userSelect: "none",
-              WebkitUserSelect: "none"
+              WebkitUserSelect: "none",
+              filter: `blur(${GAME_CONFIG.IMAGE_BLUR_INTENSITY}px)`
             } as React.CSSProperties
           }
           onContextMenu={(e) => e.preventDefault()}
