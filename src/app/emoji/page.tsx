@@ -1,20 +1,24 @@
-import {
-  getDailyChallenge,
-  getLastDailyChallenge
-} from "@/actions/dailyChallenge";
+"use client";
+
 import EmojiChallenge from "@/components/emoji-challenge";
 import FloatingNavbar from "@/components/floating-navbar";
 import { GameMode } from "@/constants/enums";
+import {
+  getDailyChallenge,
+  getLastDailyChallenge
+} from "@/lib/dailyChallengeCache";
 
 const EmojiModePage = async () => {
-  const dailyChallenge = await getDailyChallenge();
-  const lastChallenge = await getLastDailyChallenge();
+  const [challenge, lastChallenge] = await Promise.all([
+    getDailyChallenge(),
+    getLastDailyChallenge()
+  ]);
 
   return (
     <>
       <FloatingNavbar gameMode={GameMode.EMOJI} />
       <EmojiChallenge
-        character={dailyChallenge.emojiCharacter}
+        character={challenge.emojiCharacter}
         lastCharacter={lastChallenge?.emojiCharacter || null}
       />
     </>
