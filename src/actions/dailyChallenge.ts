@@ -82,23 +82,88 @@ export const getLastDailyChallenge =
 /**
  * Creates a new daily challenge with randomly selected IDs efficiently
  * Uses direct SQL to select random records without loading all data into memory
+ * Ensures no character repeats within the last 14 days for each game mode
  */
 export const createDailyChallenge = async (): Promise<DailyChallenge> => {
   try {
     const today = getUTCDate();
 
+    // Get the last 14 days of challenges to avoid repeating characters
+    const cooldownDays = 14;
+    const cooldownStart = new Date(today);
+    cooldownStart.setUTCDate(cooldownStart.getUTCDate() - cooldownDays);
+
+    const recentChallenges = await prisma.dailyChallenge.findMany({
+      where: {
+        date: {
+          gte: cooldownStart,
+          lt: today
+        }
+      },
+      select: {
+        classicCharacterId: true,
+        posterCharacterId: true,
+        emojiCharacterId: true
+      }
+    });
+
+    // Extract recent character IDs for each mode
+    const recentClassicIds = recentChallenges
+      .map((c) => c.classicCharacterId)
+      .filter((id): id is string => id !== null);
+
+    const recentPosterIds = recentChallenges
+      .map((c) => c.posterCharacterId)
+      .filter((id): id is string => id !== null);
+
+    const recentEmojiIds = recentChallenges
+      .map((c) => c.emojiCharacterId)
+      .filter((id): id is string => id !== null);
+
     // Get a random ID from each table without loading all records
-    const [randomCharacterResult] = await prisma.$queryRaw<
-      Array<{ id: string }>
-    >`SELECT id FROM characters ORDER BY RANDOM() LIMIT 1`;
+    // Exclude characters from the last 14 days
+    let randomCharacterResult: Array<{ id: string }> = [];
+    let attempts = 0;
+    while (randomCharacterResult.length === 0 && attempts < 5) {
+      const result = await prisma.$queryRaw<Array<{ id: string }>>`
+        SELECT id FROM characters 
+        WHERE id NOT IN (${
+          recentClassicIds.length > 0 ? recentClassicIds.join(",") : "''"
+        })
+        ORDER BY RANDOM() LIMIT 1
+      `;
+      randomCharacterResult = result;
+      attempts++;
+    }
 
-    const [randomPosterCharacterResult] = await prisma.$queryRaw<
-      Array<{ id: string }>
-    >`SELECT id FROM characters ORDER BY RANDOM() LIMIT 1`;
+    let randomPosterCharacterResult: Array<{ id: string }> = [];
+    attempts = 0;
+    while (randomPosterCharacterResult.length === 0 && attempts < 5) {
+      const result = await prisma.$queryRaw<Array<{ id: string }>>`
+        SELECT id FROM characters 
+        WHERE id NOT IN (${
+          recentPosterIds.length > 0 ? recentPosterIds.join(",") : "''"
+        })
+        ORDER BY RANDOM() LIMIT 1
+      `;
+      randomPosterCharacterResult = result;
+      attempts++;
+    }
 
-    const [randomEmojiCharacterResult] = await prisma.$queryRaw<
-      Array<{ id: string }>
-    >`SELECT id FROM characters WHERE emojis IS NOT NULL AND emojis != '' ORDER BY RANDOM() LIMIT 1`;
+    let randomEmojiCharacterResult: Array<{ id: string }> = [];
+    attempts = 0;
+    while (randomEmojiCharacterResult.length === 0 && attempts < 5) {
+      const result = await prisma.$queryRaw<Array<{ id: string }>>`
+        SELECT id FROM characters 
+        WHERE (emojis IS NOT NULL AND emojis != '')
+        AND id NOT IN (${
+          recentEmojiIds.length > 0 ? recentEmojiIds.join(",") : "''"
+        })
+        ORDER BY RANDOM() LIMIT 1
+      `;
+      randomEmojiCharacterResult = result;
+      attempts++;
+    }
 
     const [randomMovieResult] = await prisma.$queryRaw<Array<{ id: string }>>`
       SELECT id FROM movies ORDER BY RANDOM() LIMIT 1
@@ -114,9 +179,9 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
 
     // Validate that results were obtained
     if (
-      !randomCharacterResult ||
-      !randomPosterCharacterResult ||
-      !randomEmojiCharacterResult ||
+      randomCharacterResult.length === 0 ||
+      randomPosterCharacterResult.length === 0 ||
+      randomEmojiCharacterResult.length === 0 ||
       !randomMovieResult ||
       !randomQuoteResult ||
       !randomItemResult
@@ -127,9 +192,9 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
     const dailyChallenge = await prisma.dailyChallenge.create({
       data: {
         date: today,
-        classicCharacterId: randomCharacterResult.id,
-        posterCharacterId: randomPosterCharacterResult.id,
-        emojiCharacterId: randomEmojiCharacterResult.id,
+        classicCharacterId: randomCharacterResult[0].id,
+        posterCharacterId: randomPosterCharacterResult[0].id,
+        emojiCharacterId: randomEmojiCharacterResult[0].id,
         posterMovieId: randomMovieResult.id,
         quoteId: randomQuoteResult.id,
         itemId: randomItemResult.id
