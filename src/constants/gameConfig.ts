@@ -5,7 +5,7 @@ export const GAME_CONFIG = {
   // Number of attempts before showing the image clue
   TRIES_UNTIL_IMAGE: 12,
   // Image zoom scale factor
-  IMAGE_ZOOM_SCALE: 5,
+  IMAGE_ZOOM_SCALE: 2.5,
   // Image blur intensity (in pixels)
   IMAGE_BLUR_INTENSITY: 2,
   // Win animation delay in milliseconds
