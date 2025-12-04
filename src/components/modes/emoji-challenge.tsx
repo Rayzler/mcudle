@@ -1,29 +1,29 @@
 "use client";
 
-import { Character, Quote } from "@/types/prisma";
-import CharactersInput from "./characters-input";
+import { Character } from "@/types/prisma";
+import CharactersInput from "../characters-input";
 import { useRef } from "react";
 import confetti from "canvas-confetti";
-import WinCard from "./win-card";
+import WinCard from "../win-card";
 import { useGameState } from "@/hooks/useGameState";
 import { GAME_CONFIG, GAME_LABELS } from "@/constants/gameConfig";
 import { updateStreakOnWin } from "@/lib/streakService";
 import { GameMode } from "@/constants/enums";
 
 type Props = {
-  quote: Quote;
+  character: Character;
   lastCharacter: Character | null;
 };
 
 /**
- * QuoteChallenge - Quote game mode component
- * Player guesses the character from a quote
- * Displays only the quote and character name/photo after win
+ * EmojiChallenge - Emoji game mode component
+ * Player guesses the character from emojis
+ * Displays only the emojis and character name/photo after win
  */
-export const QuoteChallenge = ({ quote, lastCharacter }: Props) => {
+export const EmojiChallenge = ({ character, lastCharacter }: Props) => {
   const { attempts, hasWon, addAttempt, win } = useGameState(
-    GameMode.QUOTE,
-    quote.character.id
+    GameMode.EMOJI,
+    character.id
   );
 
   const winCardRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ export const QuoteChallenge = ({ quote, lastCharacter }: Props) => {
    * If correct, triggers win animation
    */
   const checkCharacter = (selectedCharacter: Character) => {
-    if (selectedCharacter.id === quote.character.id) {
+    if (selectedCharacter.id === character.id) {
       handleWin();
     } else {
       console.log(GAME_LABELS.INCORRECT_MESSAGE);
@@ -46,7 +46,7 @@ export const QuoteChallenge = ({ quote, lastCharacter }: Props) => {
    */
   const handleWin = () => {
     win();
-    updateStreakOnWin(GameMode.QUOTE);
+    updateStreakOnWin(GameMode.EMOJI);
     setTimeout(() => {
       confetti({ colors: GAME_CONFIG.CONFETTI_COLORS });
       winCardRef.current?.scrollIntoView({
@@ -60,12 +60,12 @@ export const QuoteChallenge = ({ quote, lastCharacter }: Props) => {
     <div className="flex flex-col items-center gap-5 w-full grow px-24">
       <div className="bg-neutral-800/25 backdrop-blur-md p-8 pb-7 rounded-lg shadow-lg w-full max-w-xl border-2 border-white/75">
         <h1 className="text-lg text-center text-white font-bold">
-          Who said this quote?
+          Who do these emojis represent?
         </h1>
 
-        {/* Quote text */}
-        <p className="text-2xl text-center text-gray-200 italic mt-6 mb-6">
-          "{quote.text}"
+        {/* Emojis display */}
+        <p className="text-6xl text-center mt-6 mb-6">
+          {character.emojis || "😊"}
         </p>
 
         {/* Start message */}
@@ -89,7 +89,7 @@ export const QuoteChallenge = ({ quote, lastCharacter }: Props) => {
           <div className="w-full max-w-[50%] items-center mx-auto mt-8 mb-4">
             <div className="flex flex-col gap-3">
               {attempts.map((attempt) => {
-                const isCorrect = attempt.id === quote.character.id;
+                const isCorrect = attempt.id === character.id;
                 const bgColor = isCorrect
                   ? "bg-green-600/20 border-green-500"
                   : "bg-red-600/20 border-red-500";
@@ -123,9 +123,9 @@ export const QuoteChallenge = ({ quote, lastCharacter }: Props) => {
         {hasWon && (
           <div ref={winCardRef}>
             <WinCard
-              character={quote.character}
+              character={character}
               attempts={attempts.length}
-              gameMode={GameMode.QUOTE}
+              gameMode={GameMode.EMOJI}
             />
           </div>
         )}
@@ -144,4 +144,4 @@ export const QuoteChallenge = ({ quote, lastCharacter }: Props) => {
   );
 };
 
-export default QuoteChallenge;
+export default EmojiChallenge;

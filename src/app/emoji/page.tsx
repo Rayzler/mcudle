@@ -1,6 +1,6 @@
 "use client";
 
-import EmojiChallenge from "@/components/emoji-challenge";
+import EmojiChallenge from "@/components/modes/emoji-challenge";
 import FloatingNavbar from "@/components/floating-navbar";
 import { GameMode } from "@/constants/enums";
 import {

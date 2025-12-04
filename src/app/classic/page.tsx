@@ -1,4 +1,4 @@
-import ClassicChallenge from "@/components/classic-challenge";
+import ClassicChallenge from "@/components/modes/classic-challenge";
 import FloatingNavbar from "@/components/floating-navbar";
 import { GameMode } from "@/constants/enums";
 import {

@@ -1,14 +1,14 @@
 "use client";
 
 import { Character } from "@/types/prisma";
-import CharactersInput from "./characters-input";
+import CharactersInput from "../characters-input";
 import { useMemo, useRef } from "react";
 import confetti from "canvas-confetti";
-import CharactersGrid from "./characters-grid";
-import ClueButtons from "./ClueButtons";
-import QuoteClue from "./quote-clue";
-import ImageClue from "./image-clue";
-import WinCard from "./win-card";
+import CharactersGrid from "../characters-grid";
+import ClueButtons from "../ClueButtons";
+import QuoteClue from "../quote-clue";
+import ImageClue from "../image-clue";
+import WinCard from "../win-card";
 import { getDailyRandomElement } from "@/lib/dateUtils";
 import { useImageZoomPosition } from "@/hooks/useImageZoomPosition";
 import { useGameState } from "@/hooks/useGameState";
