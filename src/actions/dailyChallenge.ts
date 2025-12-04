@@ -126,11 +126,13 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
     let randomCharacterResult: Array<{ id: string }> = [];
     let attempts = 0;
     while (randomCharacterResult.length === 0 && attempts < 5) {
-      const result = await prisma.$queryRaw<Array<{ id: string }>>`
-        SELECT id FROM characters 
-        WHERE id NOT IN (${Prisma.join(recentClassicIds)})
-        ORDER BY RANDOM() LIMIT 1
-      `;
+      const query =
+        recentClassicIds.length > 0
+          ? Prisma.sql`SELECT id FROM characters WHERE id NOT IN (${Prisma.join(
+              recentClassicIds
+            )}) ORDER BY RANDOM() LIMIT 1`
+          : Prisma.sql`SELECT id FROM characters ORDER BY RANDOM() LIMIT 1`;
+      const result = await prisma.$queryRaw<Array<{ id: string }>>`${query}`;
       randomCharacterResult = result;
       attempts++;
     }
@@ -138,11 +140,13 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
     let randomPosterCharacterResult: Array<{ id: string }> = [];
     attempts = 0;
     while (randomPosterCharacterResult.length === 0 && attempts < 5) {
-      const result = await prisma.$queryRaw<Array<{ id: string }>>`
-        SELECT id FROM characters 
-        WHERE id NOT IN (${Prisma.join(recentPosterIds)})
-        ORDER BY RANDOM() LIMIT 1
-      `;
+      const query =
+        recentPosterIds.length > 0
+          ? Prisma.sql`SELECT id FROM characters WHERE id NOT IN (${Prisma.join(
+              recentPosterIds
+            )}) ORDER BY RANDOM() LIMIT 1`
+          : Prisma.sql`SELECT id FROM characters ORDER BY RANDOM() LIMIT 1`;
+      const result = await prisma.$queryRaw<Array<{ id: string }>>`${query}`;
       randomPosterCharacterResult = result;
       attempts++;
     }
@@ -150,12 +154,13 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
     let randomEmojiCharacterResult: Array<{ id: string }> = [];
     attempts = 0;
     while (randomEmojiCharacterResult.length === 0 && attempts < 5) {
-      const result = await prisma.$queryRaw<Array<{ id: string }>>`
-        SELECT id FROM characters 
-        WHERE (emojis IS NOT NULL AND emojis != '')
-        AND id NOT IN (${Prisma.join(recentEmojiIds)})
-        ORDER BY RANDOM() LIMIT 1
-      `;
+      const query =
+        recentEmojiIds.length > 0
+          ? Prisma.sql`SELECT id FROM characters WHERE (emojis IS NOT NULL AND emojis != '') AND id NOT IN (${Prisma.join(
+              recentEmojiIds
+            )}) ORDER BY RANDOM() LIMIT 1`
+          : Prisma.sql`SELECT id FROM characters WHERE (emojis IS NOT NULL AND emojis != '') ORDER BY RANDOM() LIMIT 1`;
+      const result = await prisma.$queryRaw<Array<{ id: string }>>`${query}`;
       randomEmojiCharacterResult = result;
       attempts++;
     }

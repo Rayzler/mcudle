@@ -37,7 +37,7 @@ const ClueButton = ({
       <div className="flex flex-col items-center">
         <p
           className={clsx(
-            "-mb-0.5, transition-all duration-200",
+            "-mb-0.5 transition-all duration-200",
             disabled ? "text-sm" : "text-lg -mt-0.5",
             isActive && !disabled ? "text-red-600 font-bold" : ""
           )}

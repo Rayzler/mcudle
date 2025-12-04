@@ -28,7 +28,6 @@ const getCachedResults = (query: string): Character[] | null => {
     return null;
   }
 
-  console.log(`[CLIENT CACHE] Using cached results for: "${query}"`);
   return cached.results;
 };
 
@@ -75,7 +74,6 @@ const CharactersInput = ({
     // Check client-side cache first and show immediately
     const cachedResults = getCachedResults(currentQuery);
     if (cachedResults !== null) {
-      console.log(`[CACHE HIT] Showing cached results for: "${currentQuery}"`);
       setCharacters(cachedResults);
       setIsLoading(false);
       return;
@@ -87,7 +85,6 @@ const CharactersInput = ({
 
     const performSearch = async () => {
       try {
-        console.log(`[SEARCH] Querying server for: "${currentQuery}"`);
         const response = await getCharactersByQuery(currentQuery, selectedIds);
 
         // Only update UI if this is still the latest query
@@ -95,18 +92,10 @@ const CharactersInput = ({
           // Store in client cache
           setCachedResults(currentQuery, response);
           setCharacters(response);
-          console.log(
-            `[SEARCH] Showing results for: "${currentQuery}" (${response.length} items)`
-          );
-        } else {
-          console.log(
-            `[SEARCH] Ignoring stale response for: "${currentQuery}" (current: "${latestQueryRef.current}")`
-          );
         }
       } catch (error) {
         // Ignore abort errors
         if (error instanceof Error && error.name === "AbortError") {
-          console.log(`[SEARCH] Request cancelled for: "${currentQuery}"`);
           return;
         }
 
@@ -170,8 +159,7 @@ const CharactersInput = ({
                   >
                     <img
                       src={
-                        character.imageUrl ||
-                        "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+                        character.imageUrl || "/images/portrait_placeholder.png"
                       }
                       alt={character.name}
                       className="w-10 h-10 aspect-square object-cover object-top"

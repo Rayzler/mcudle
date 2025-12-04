@@ -19,7 +19,7 @@ export const ImageClue = ({
   position
 }: ImageClueProps) => {
   // Don't render if not visible or position not yet calculated
-  if (!isVisible || !position) return null;
+  if (!isVisible || !position || !imageUrl) return null;
 
   return (
     <div className="mt-4 flex justify-center">

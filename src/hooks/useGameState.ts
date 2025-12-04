@@ -39,8 +39,9 @@ export const useGameState = (gameMode: GameMode, characterId: string) => {
   }, [gameMode, characterId]);
 
   // Save game state whenever it changes (only after initial load)
+  // Skip saving when hasWon is true (state is cleared on win)
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded || hasWon) return;
 
     const gameState: GameState = {
       attempts,
@@ -57,14 +58,20 @@ export const useGameState = (gameMode: GameMode, characterId: string) => {
   }, []);
 
   const toggleQuote = useCallback(() => {
-    setShowQuote((prev) => !prev);
-    if (!showQuote) setShowImage(false);
-  }, [showQuote]);
+    setShowQuote((prev) => {
+      const next = !prev;
+      if (next) setShowImage(false);
+      return next;
+    });
+  }, []);
 
   const toggleImage = useCallback(() => {
-    setShowImage((prev) => !prev);
-    if (!showImage) setShowQuote(false);
-  }, [showImage]);
+    setShowImage((prev) => {
+      const next = !prev;
+      if (next) setShowQuote(false);
+      return next;
+    });
+  }, []);
 
   const win = useCallback(() => {
     setHasWon(true);

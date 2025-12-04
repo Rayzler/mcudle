@@ -1,6 +1,8 @@
 import Image from "next/image";
 
 const domain = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
+const buildYear =
+  process.env.NEXT_PUBLIC_BUILD_YEAR || String(new Date().getFullYear());
 
 const Footer = () => {
   return (
@@ -8,18 +10,18 @@ const Footer = () => {
       <div className="flex gap-[24px] flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="#"
+          href={domain}
           target="_blank"
           rel="noopener noreferrer"
         >
           <Image
-            aria-hidden
+            aria-hidden={true}
             src="/globe.svg"
-            alt="File icon"
+            alt=""
             width={16}
             height={16}
           />
-          {domain} — 2025
+          {domain} — {buildYear}
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
@@ -28,9 +30,9 @@ const Footer = () => {
           rel="noopener noreferrer"
         >
           <Image
-            aria-hidden
+            aria-hidden={true}
             src="/file.svg"
-            alt="File icon"
+            alt=""
             width={16}
             height={16}
           />

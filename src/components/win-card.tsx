@@ -94,10 +94,7 @@ export const WinCard = ({
         <div className="bg-neutral-800/50 rounded-lg p-4 mb-6 border border-white/20">
           <div className="flex gap-4 items-center">
             <img
-              src={
-                character.imageUrl ||
-                "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-              }
+              src={character.imageUrl || "/images/portrait_placeholder.png"}
               alt={character.name}
               className="w-20 h-20 rounded-lg object-cover object-top"
             />
@@ -154,7 +151,11 @@ export const WinCard = ({
         )}
 
         {/* Countdown Timer */}
-        <div className="bg-neutral-800/50 rounded-lg p-4 border border-red-600/30 shadow-lg shadow-red-600/10 mb-6">
+        <div
+          className="bg-neutral-800/50 rounded-lg p-4 border border-red-600/30 shadow-lg shadow-red-600/10 mb-6"
+          aria-live="polite"
+          aria-label="Next challenge countdown timer"
+        >
           <p className="text-xs text-gray-400 uppercase tracking-wider mb-3">
             Next Challenge In
           </p>

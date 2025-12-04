@@ -112,8 +112,6 @@ export const ImageChallenge = ({ character, lastCharacter }: Props) => {
   const checkCharacter = (selectedCharacter: Character) => {
     if (selectedCharacter.id === character.id) {
       handleWin();
-    } else {
-      console.log(GAME_LABELS.INCORRECT_MESSAGE);
     }
     addAttempt(selectedCharacter);
   };

@@ -68,12 +68,8 @@ export const getCharactersByQuery = async (
   query: string,
   skip?: string[]
 ): Promise<Character[]> => {
-  console.log(`[SEARCH CACHE] Searching for: "${query}"`);
   try {
     const result = await getCharactersByQueryCached(query, skip || []);
-    console.log(
-      `[SEARCH CACHE] Found ${result.length} characters for: "${query}"`
-    );
     return result;
   } catch (error) {
     if (error instanceof ZodError) {
