@@ -5,11 +5,15 @@ export interface Character extends Prisma.Character {
   quote?: Prisma.Quote[];
 }
 
+export interface Quote extends Prisma.Quote {
+  character: Character;
+}
+
 export interface DailyChallenge extends Prisma.DailyChallenge {
   character: Character;
   posterCharacter: Character;
   emojiCharacter: Character;
   posterMovie: Prisma.Movie;
-  quote: Prisma.Quote;
+  quote: Quote;
   item: Prisma.Item;
 }

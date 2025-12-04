@@ -8,8 +8,6 @@ import { GameMode, getGameStateKey } from "@/constants/enums";
 
 export interface GameState {
   attempts: Character[];
-  showQuote: boolean;
-  showImage: boolean;
   hasWon: boolean;
   characterId: string;
   savedAt: string; // ISO timestamp

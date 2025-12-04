@@ -30,8 +30,6 @@ export const useGameState = (gameMode: GameMode, characterId: string) => {
       const savedState = loadGameState(gameMode);
       if (savedState) {
         setAttempts(savedState.attempts);
-        setShowQuote(savedState.showQuote);
-        setShowImage(savedState.showImage);
         setHasWon(savedState.hasWon);
         // Store how many attempts were loaded
         initialAttemptsCount.current = savedState.attempts.length;
@@ -46,14 +44,12 @@ export const useGameState = (gameMode: GameMode, characterId: string) => {
 
     const gameState: GameState = {
       attempts,
-      showQuote,
-      showImage,
       hasWon,
       characterId,
       savedAt: new Date().toISOString()
     };
     saveGameState(gameMode, gameState);
-  }, [attempts, showQuote, showImage, hasWon, characterId, gameMode, isLoaded]);
+  }, [attempts, hasWon, characterId, gameMode, isLoaded]);
 
   // Callbacks for state updates
   const addAttempt = useCallback((character: Character) => {

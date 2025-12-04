@@ -62,7 +62,11 @@ export const FloatingNavbar = ({
       </div>
 
       {/* How to Play Modal */}
-      <HowToPlayModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      <HowToPlayModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        gameMode={gameMode}
+      />
     </>
   );
 };
