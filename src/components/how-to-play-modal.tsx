@@ -39,7 +39,7 @@ export const HowToPlayModal = ({
       ).filter((el) => !el.hasAttribute("disabled"));
     };
 
-    // Focus first focusable element (close button prefered)
+    // Focus first focusable element (close button preferred)
     const focusable = getFocusable();
     if (closeButtonRef.current) {
       closeButtonRef.current.focus();
@@ -108,7 +108,7 @@ export const HowToPlayModal = ({
             className="text-white hover:text-red-600 transition-colors"
             aria-label="Close help dialog"
           >
-            <IoClose size={28} />
+            <IoClose size={28} aria-hidden={true} />
           </button>
         </div>
 

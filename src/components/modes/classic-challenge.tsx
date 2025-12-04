@@ -61,8 +61,6 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
   const checkCharacter = (selectedCharacter: Character) => {
     if (selectedCharacter.id === character?.id) {
       setTimeout(() => handleWin(), GAME_CONFIG.WIN_ANIMATION_DELAY);
-    } else {
-      console.log(GAME_LABELS.INCORRECT_MESSAGE);
     }
     addAttempt(selectedCharacter);
   };

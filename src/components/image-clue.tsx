@@ -25,7 +25,7 @@ export const ImageClue = ({
     <div className="mt-4 flex justify-center">
       <div className="w-48 h-56 overflow-hidden rounded-lg bg-black">
         <img
-          src={imageUrl || ""}
+          src={imageUrl}
           alt={characterName}
           style={
             {
