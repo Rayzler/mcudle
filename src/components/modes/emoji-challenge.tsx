@@ -17,18 +17,22 @@ type Props = {
 
 /**
  * Sanitizes emoji content to prevent XSS attacks
- * Allows only emoji and common unicode characters
+ * Uses a strict whitelist approach that only allows actual emoji characters
+ * Based on Unicode emoji ranges and common emoji patterns
  */
 const sanitizeEmojis = (content: string | null | undefined): string => {
   if (!content || typeof content !== "string") {
     return "😊";
   }
 
-  // Remove any HTML/script tags and keep only emoji and whitespace
-  const sanitized = content
-    .replace(/<[^>]*>/g, "") // Remove HTML tags
-    .replace(/[^\p{L}\p{N}\p{P}\p{S}\s]/gu, "") // Keep letters, numbers, punctuation, symbols, and whitespace
-    .trim();
+  // Regex pattern that matches emoji characters from various Unicode ranges
+  // Includes: Basic Emoji, Emoticons, Symbols, Pictographs, and variations
+  const emojiPattern =
+    /[\p{Emoji}\p{Emoji_Component}](?:\p{Emoji_Modifier}|\u{FE0F}\u{20E3}?|\u{20E3})?(?:\u{200D}[\p{Emoji}\p{Emoji_Component}](?:\p{Emoji_Modifier}|\u{FE0F}\u{20E3}?|\u{20E3})?)*|\u{2764}\u{FE0F}?/gu;
+
+  // Extract only valid emoji characters and whitespace
+  const emojis = content.match(emojiPattern) || [];
+  const sanitized = emojis.join("").trim();
 
   return sanitized || "😊";
 };
