@@ -20,7 +20,11 @@ export const getDailyChallenge = async (): Promise<DailyChallenge> => {
         posterCharacter: true,
         posterMovie: true,
         emojiCharacter: true,
-        quote: true,
+        quote: {
+          include: {
+            character: true
+          }
+        },
         item: true
       }
     });
@@ -59,7 +63,11 @@ export const getLastDailyChallenge =
           posterCharacter: true,
           posterMovie: true,
           emojiCharacter: true,
-          quote: true,
+          quote: {
+            include: {
+              character: true
+            }
+          },
           item: true
         }
       });
@@ -136,7 +144,11 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
         posterCharacter: true,
         posterMovie: true,
         emojiCharacter: true,
-        quote: true,
+        quote: {
+          include: {
+            character: true
+          }
+        },
         item: true
       }
     });
