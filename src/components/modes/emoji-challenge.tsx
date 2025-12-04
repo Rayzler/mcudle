@@ -16,6 +16,24 @@ type Props = {
 };
 
 /**
+ * Sanitizes emoji content to prevent XSS attacks
+ * Allows only emoji and common unicode characters
+ */
+const sanitizeEmojis = (content: string | null | undefined): string => {
+  if (!content || typeof content !== "string") {
+    return "😊";
+  }
+
+  // Remove any HTML/script tags and keep only emoji and whitespace
+  const sanitized = content
+    .replace(/<[^>]*>/g, "") // Remove HTML tags
+    .replace(/[^\p{L}\p{N}\p{P}\p{S}\s]/gu, "") // Keep letters, numbers, punctuation, symbols, and whitespace
+    .trim();
+
+  return sanitized || "😊";
+};
+
+/**
  * EmojiChallenge - Emoji game mode component
  * Player guesses the character from emojis
  * Displays only the emojis and character name/photo after win
@@ -35,8 +53,6 @@ export const EmojiChallenge = ({ character, lastCharacter }: Props) => {
   const checkCharacter = (selectedCharacter: Character) => {
     if (selectedCharacter.id === character.id) {
       handleWin();
-    } else {
-      console.log(GAME_LABELS.INCORRECT_MESSAGE);
     }
     addAttempt(selectedCharacter);
   };
@@ -65,7 +81,7 @@ export const EmojiChallenge = ({ character, lastCharacter }: Props) => {
 
         {/* Emojis display */}
         <p className="text-6xl text-center mt-6 mb-6">
-          {character.emojis || "😊"}
+          {sanitizeEmojis(character.emojis)}
         </p>
 
         {/* Start message */}

@@ -4,6 +4,7 @@
  */
 
 import { GameMode } from "@/constants/enums";
+import { getYesterdayUTC } from "./dateUtils";
 
 export type StreakData = {
   [key in GameMode]: {
@@ -134,10 +135,8 @@ export const updateStreakOnWin = (gameMode: GameMode): void => {
     return;
   }
 
-  // Check if streak should continue or reset
-  const yesterday = new Date();
-  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  // Check if streak should continue or reset (use UTC-consistent yesterday)
+  const yesterdayStr = getYesterdayUTC();
 
   if (lastPlayed === yesterdayStr) {
     // Streak continues
@@ -169,9 +168,7 @@ export const getStreakForMode = (gameMode: GameMode): number => {
 
   // Reset streak if last played was more than 1 day ago
   if (modeData.lastPlayedDate) {
-    const yesterday = new Date();
-    yesterday.setUTCDate(yesterday.getUTCDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    const yesterdayStr = getYesterdayUTC();
 
     if (
       modeData.lastPlayedDate !== today &&

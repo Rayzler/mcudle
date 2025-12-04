@@ -18,7 +18,7 @@ export const QuoteClue = ({ isVisible, quote, hasQuotes }: QuoteClueProps) => {
     <p
       className={`${shareTech.className} text-xl text-center mt-4 uppercase animate-flip-up animate-duration-200`}
     >
-      {hasQuotes ? `"${quote}"` : GAME_LABELS.NO_QUOTES_MESSAGE}
+      {hasQuotes && quote ? `"${quote}"` : GAME_LABELS.NO_QUOTES_MESSAGE}
     </p>
   );
 };

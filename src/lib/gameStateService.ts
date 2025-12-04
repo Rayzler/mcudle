@@ -25,8 +25,6 @@ export const saveGameState = (gameMode: GameMode, state: GameState): void => {
   } catch (error) {
     console.error(`Error saving game state for ${gameMode}:`, error);
   }
-
-  console.log(`Game state saved for ${gameMode}:`, state);
 };
 
 /**

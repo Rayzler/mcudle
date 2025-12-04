@@ -31,36 +31,44 @@ const getSecondsUntilMidnightUTC = (): number => {
  * Server-side cached version of getDailyChallenge
  * Caches until next midnight UTC
  * Tag-based revalidation per day
+ *
+ * Computed dynamically per-call to ensure revalidate and tags reflect current time
  */
-export const getDailyChallenge = unstable_cache(
-  async () => {
-    console.log("[CACHE] Fetching daily challenge from database...");
-    const result = await fetchDailyChallenge();
-    console.log("[CACHE] Daily challenge fetched from database");
-    return result;
-  },
-  ["daily-challenge"],
-  {
-    revalidate: getSecondsUntilMidnightUTC(),
-    tags: [`daily-challenge-${getUTCDate().toISOString().split("T")[0]}`]
-  }
-);
+export const getDailyChallenge = async () => {
+  const todayISO = getUTCDate().toISOString().split("T")[0];
+  const cachedFn = unstable_cache(
+    async () => {
+      const result = await fetchDailyChallenge();
+      return result;
+    },
+    ["daily-challenge", todayISO],
+    {
+      revalidate: getSecondsUntilMidnightUTC(),
+      tags: [`daily-challenge-${todayISO}`]
+    }
+  );
+  return cachedFn();
+};
 
 /**
  * Server-side cached version of getLastDailyChallenge
  * Caches until next midnight UTC
  * Tag-based revalidation per day
+ *
+ * Computed dynamically per-call to ensure revalidate and tags reflect current time
  */
-export const getLastDailyChallenge = unstable_cache(
-  async () => {
-    console.log("[CACHE] Fetching last daily challenge from database...");
-    const result = await fetchLastDailyChallenge();
-    console.log("[CACHE] Last daily challenge fetched from database");
-    return result;
-  },
-  ["last-daily-challenge"],
-  {
-    revalidate: getSecondsUntilMidnightUTC(),
-    tags: [`last-daily-challenge-${getUTCDate().toISOString().split("T")[0]}`]
-  }
-);
+export const getLastDailyChallenge = async () => {
+  const todayISO = getUTCDate().toISOString().split("T")[0];
+  const cachedFn = unstable_cache(
+    async () => {
+      const result = await fetchLastDailyChallenge();
+      return result;
+    },
+    ["last-daily-challenge", todayISO],
+    {
+      revalidate: getSecondsUntilMidnightUTC(),
+      tags: [`last-daily-challenge-${todayISO}`]
+    }
+  );
+  return cachedFn();
+};

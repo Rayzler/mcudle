@@ -1,19 +1,26 @@
-import Prisma from "@prisma/client";
+import type {
+  Character as PrismaCharacter,
+  Quote as PrismaQuote,
+  DailyChallenge as PrismaDailyChallenge,
+  Team,
+  Movie,
+  Item
+} from "@prisma/client";
 
-export interface Character extends Prisma.Character {
-  teams?: Prisma.Team[];
-  quote?: Prisma.Quote[];
+export interface Character extends PrismaCharacter {
+  teams?: Team[];
+  quote?: PrismaQuote[];
 }
 
-export interface Quote extends Prisma.Quote {
+export interface Quote extends PrismaQuote {
   character: Character;
 }
 
-export interface DailyChallenge extends Prisma.DailyChallenge {
+export interface DailyChallenge extends PrismaDailyChallenge {
   character: Character;
   posterCharacter: Character;
   emojiCharacter: Character;
-  posterMovie: Prisma.Movie;
+  posterMovie: Movie;
   quote: Quote;
-  item: Prisma.Item;
+  item: Item;
 }

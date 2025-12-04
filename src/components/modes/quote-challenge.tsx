@@ -35,8 +35,6 @@ export const QuoteChallenge = ({ quote, lastCharacter }: Props) => {
   const checkCharacter = (selectedCharacter: Character) => {
     if (selectedCharacter.id === quote.character.id) {
       handleWin();
-    } else {
-      console.log(GAME_LABELS.INCORRECT_MESSAGE);
     }
     addAttempt(selectedCharacter);
   };

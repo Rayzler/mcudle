@@ -46,7 +46,7 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
 
   // Memoize quote selection to ensure it doesn't change on every render
   const quoteClue = useMemo(
-    () => getDailyRandomElement(character.quote?.map((q) => q.text) || []),
+    () => getDailyRandomElement(character.quote?.map((q) => q.text) || []) ?? null,
     [character.quote]
   );
 

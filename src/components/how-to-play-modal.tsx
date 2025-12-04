@@ -2,6 +2,7 @@
 
 import { IoClose } from "react-icons/io5";
 import { GameMode } from "@/constants/enums";
+import { useEffect, useRef } from "react";
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -20,19 +21,92 @@ export const HowToPlayModal = ({
 }: HowToPlayModalProps) => {
   if (!isOpen) return null;
 
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    const modal = modalRef.current;
+    if (!modal) return;
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    // Helper: find all focusable elements inside the modal
+    const getFocusable = () => {
+      return Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !el.hasAttribute("disabled"));
+    };
+
+    // Focus first focusable element (close button prefered)
+    const focusable = getFocusable();
+    if (closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    } else if (focusable.length > 0) {
+      focusable[0].focus();
+    } else {
+      // Make modal container focusable as fallback
+      modal.setAttribute("tabindex", "-1");
+      modal.focus();
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (e.key !== "Tab") return;
+
+      const focusableEls = getFocusable();
+      if (focusableEls.length === 0) {
+        e.preventDefault();
+        return;
+      }
+
+      const firstEl = focusableEls[0];
+      const lastEl = focusableEls[focusableEls.length - 1];
+
+      if (!e.shiftKey && document.activeElement === lastEl) {
+        e.preventDefault();
+        firstEl.focus();
+      } else if (e.shiftKey && document.activeElement === firstEl) {
+        e.preventDefault();
+        lastEl.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      // restore focus
+      if (previouslyFocused && typeof previouslyFocused.focus === "function") {
+        previouslyFocused.focus();
+      }
+    };
+  }, [onClose]);
+
   const isClassicMode = gameMode === GameMode.CLASSIC;
   const isQuoteMode = gameMode === GameMode.QUOTE;
   const isImageMode = gameMode === GameMode.IMAGE;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-neutral-800/25 backdrop-blur-md rounded-lg border-2 border-white/75 shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div
+        ref={modalRef}
+        className="bg-neutral-800/25 backdrop-blur-md rounded-lg border-2 border-white/75 shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+      >
         {/* Header */}
         <div className="sticky top-0 bg-neutral-900 border-b border-white/20 p-6 flex items-center justify-between z-10">
           <h2 className="text-2xl font-bold text-white">How to Play</h2>
           <button
+            ref={closeButtonRef}
             onClick={onClose}
             className="text-white hover:text-red-600 transition-colors"
+            aria-label="Close help dialog"
           >
             <IoClose size={28} />
           </button>
@@ -85,16 +159,12 @@ export const HowToPlayModal = ({
                 </>
               ) : isImageMode ? (
                 <>
-                  <li>
-                    You'll see a heavily zoomed image of a character
-                  </li>
+                  <li>You'll see a heavily zoomed image of a character</li>
                   <li>
                     Start guessing! The image is very zoomed in to make it
                     challenging
                   </li>
-                  <li>
-                    With each wrong guess, the zoom level decreases
-                  </li>
+                  <li>With each wrong guess, the zoom level decreases</li>
                   <li>
                     The image gradually reveals more detail until you reach
                     normal zoom (1x)

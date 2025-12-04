@@ -60,7 +60,7 @@ const CharactersGrid = memo(
           });
         }
       });
-    });
+    }, [attempts]);
 
     return (
       <div className="w-full my-8 max-w-[620px] flex flex-col gap-2">
@@ -184,6 +184,8 @@ const CharactersGrid = memo(
                     <img
                       src="/images/ui/arrow_up.svg"
                       alt=""
+                      role="presentation"
+                      aria-hidden="true"
                       className={clsx("invert absolute opacity-30 p-2", {
                         "rotate-180":
                           attempt.firstAppearance > character.firstAppearance
