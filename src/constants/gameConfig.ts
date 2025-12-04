@@ -8,6 +8,12 @@ export const GAME_CONFIG = {
   IMAGE_ZOOM_SCALE: 2.5,
   // Image blur intensity (in pixels)
   IMAGE_BLUR_INTENSITY: 2,
+  // Image mode zoom settings
+  IMAGE_MODE_BASE_ZOOM: 5,
+  IMAGE_MODE_ZOOM_DECREASE_FAST: 0.25, // From 5x to 3x
+  IMAGE_MODE_ZOOM_THRESHOLD: 3, // Threshold where decrease changes
+  IMAGE_MODE_ZOOM_DECREASE_SLOW: 0.1, // From 3x to 1x
+  IMAGE_MODE_MIN_ZOOM: 1,
   // Win animation delay in milliseconds
   WIN_ANIMATION_DELAY: 1800,
   // Confetti colors (MCU red theme)

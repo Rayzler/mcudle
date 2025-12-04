@@ -22,6 +22,7 @@ export const HowToPlayModal = ({
 
   const isClassicMode = gameMode === GameMode.CLASSIC;
   const isQuoteMode = gameMode === GameMode.QUOTE;
+  const isImageMode = gameMode === GameMode.IMAGE;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -47,6 +48,8 @@ export const HowToPlayModal = ({
                 ? "Guess the daily MCU character in as few attempts as possible. You'll have clues to help you along the way!"
                 : isQuoteMode
                 ? "Guess which MCU character said the famous quote. Can you figure it out?"
+                : isImageMode
+                ? "Guess the character from a zoomed image. With each wrong attempt, the zoom level decreases, revealing more of the image!"
                 : "Guess the daily MCU character in as few attempts as possible!"}
             </p>
           </div>
@@ -79,6 +82,26 @@ export const HowToPlayModal = ({
                     tried
                   </li>
                   <li>Keep guessing until you find the right character!</li>
+                </>
+              ) : isImageMode ? (
+                <>
+                  <li>
+                    You'll see a heavily zoomed image (8x zoom) of a character
+                  </li>
+                  <li>
+                    Start guessing! The image is very zoomed in to make it
+                    challenging
+                  </li>
+                  <li>
+                    With each wrong guess, the zoom level decreases by 0.5x
+                  </li>
+                  <li>
+                    The image gradually reveals more detail until you reach
+                    normal zoom (1x)
+                  </li>
+                  <li>
+                    Keep guessing until you identify the character correctly!
+                  </li>
                 </>
               ) : (
                 <>
@@ -176,6 +199,14 @@ export const HowToPlayModal = ({
                   </li>
                   <li>Consider the context of the quote</li>
                   <li>New quote every day at midnight UTC</li>
+                  <li>Build your streak by playing every day!</li>
+                </>
+              ) : isImageMode ? (
+                <>
+                  <li>Pay attention to clothing and distinctive features</li>
+                  <li>Skin tone and hair color can be very helpful</li>
+                  <li>The zoom decreases smoothly with each attempt</li>
+                  <li>New image every day at midnight UTC</li>
                   <li>Build your streak by playing every day!</li>
                 </>
               ) : (
