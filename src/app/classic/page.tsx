@@ -1,20 +1,22 @@
-import {
-  getDailyChallenge,
-  getLastDailyChallenge
-} from "@/actions/dailyChallenge";
 import ClassicChallenge from "@/components/classic-challenge";
 import FloatingNavbar from "@/components/floating-navbar";
 import { GameMode } from "@/constants/enums";
+import {
+  getDailyChallenge,
+  getLastDailyChallenge
+} from "@/lib/dailyChallengeCache";
 
 const ClassicModePage = async () => {
-  const { character } = await getDailyChallenge();
-  const lastChallenge = await getLastDailyChallenge();
+  const [challenge, lastChallenge] = await Promise.all([
+    getDailyChallenge(),
+    getLastDailyChallenge()
+  ]);
 
   return (
     <>
       <FloatingNavbar gameMode={GameMode.CLASSIC} />
       <ClassicChallenge
-        character={character}
+        character={challenge.character}
         lastCharacter={lastChallenge?.character || null}
       />
     </>
