@@ -1,10 +1,10 @@
 "use client";
 
 import { Character } from "@/types/prisma";
-import CharactersInput from "./characters-input";
+import CharactersInput from "../characters-input";
 import { useRef, useEffect } from "react";
 import confetti from "canvas-confetti";
-import WinCard from "./win-card";
+import WinCard from "../win-card";
 import { useGameState } from "@/hooks/useGameState";
 import { GAME_CONFIG, GAME_LABELS } from "@/constants/gameConfig";
 import { updateStreakOnWin } from "@/lib/streakService";

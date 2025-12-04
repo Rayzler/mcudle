@@ -1,4 +1,4 @@
-import QuoteChallenge from "@/components/quote-challenge";
+import QuoteChallenge from "@/components/modes/quote-challenge";
 import FloatingNavbar from "@/components/floating-navbar";
 import { GameMode } from "@/constants/enums";
 import {

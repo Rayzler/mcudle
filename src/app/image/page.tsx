@@ -1,4 +1,4 @@
-import ImageChallenge from "@/components/image-challenge";
+import ImageChallenge from "@/components/modes/image-challenge";
 import FloatingNavbar from "@/components/floating-navbar";
 import { GameMode } from "@/constants/enums";
 import {
