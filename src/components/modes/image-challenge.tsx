@@ -33,13 +33,13 @@ export const ImageChallenge = ({ character, lastCharacter }: Props) => {
   // From 5x to 3x: decrease by 0.5 per attempt
   // From 3x to 1x: decrease by 0.25 per attempt
   const calculateZoom = () => {
-    let currentZoom = GAME_CONFIG.IMAGE_MODE_BASE_ZOOM;
     const fastPhaseAttempts = Math.ceil(
       (GAME_CONFIG.IMAGE_MODE_BASE_ZOOM -
         GAME_CONFIG.IMAGE_MODE_ZOOM_THRESHOLD) /
         GAME_CONFIG.IMAGE_MODE_ZOOM_DECREASE_FAST
     );
 
+    let currentZoom: number;
     if (attempts.length <= fastPhaseAttempts) {
       // Fast decrease phase (0.5 per attempt)
       currentZoom =

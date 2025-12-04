@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { getDailyChallenge } from "@/actions/dailyChallenge";
+import {
+  getDailyChallenge,
+  getLastDailyChallenge
+} from "@/lib/dailyChallengeCache";
 import { shareTech } from "@/fonts";
 import Footer from "@/components/footer";
 import Logo from "@/components/logo";
@@ -10,12 +13,14 @@ export const metadata: Metadata = {
   description: "Guess the daily Marvel Cinematic Universe character!"
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  getDailyChallenge();
+  // Pre-warm the cache by fetching challenges at root level
+  // This ensures all mode pages will use the cached results
+  await Promise.all([getDailyChallenge(), getLastDailyChallenge()]);
 
   return (
     <html lang="en">

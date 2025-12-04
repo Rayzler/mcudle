@@ -7,21 +7,21 @@ import {
 import { GameMode } from "@/constants/enums";
 
 /**
- * Hook personalizado para manejar la racha del jugador
- * Provee funciones y estado para gestionar la racha
+ * Custom hook to manage player streak
+ * Provides functions and state to handle streak management
  */
 export const useStreak = (gameMode: GameMode) => {
   const [streak, setStreak] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Cargar racha al montar el componente y escuchar cambios
+  // Load streak on component mount and listen for changes
   useEffect(() => {
     setIsLoading(true);
     const currentStreak = getStreakForMode(gameMode);
     setStreak(currentStreak);
     setIsLoading(false);
 
-    // Suscribirse a actualizaciones de racha
+    // Subscribe to streak updates
     const unsubscribe = subscribeToStreakUpdates((updatedGameMode) => {
       if (updatedGameMode === gameMode) {
         const newStreak = getStreakForMode(gameMode);
@@ -32,7 +32,7 @@ export const useStreak = (gameMode: GameMode) => {
     return unsubscribe;
   }, [gameMode]);
 
-  // Actualizar racha cuando el jugador gana
+  // Update streak when player wins
   const updateStreakOnWin = useCallback(() => {
     updateService(gameMode);
   }, [gameMode]);

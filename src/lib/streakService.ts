@@ -169,7 +169,6 @@ export const getStreakForMode = (gameMode: GameMode): number => {
 
   // Reset streak if last played was more than 1 day ago
   if (modeData.lastPlayedDate) {
-    const lastPlayed = new Date(modeData.lastPlayedDate);
     const yesterday = new Date();
     yesterday.setUTCDate(yesterday.getUTCDate() - 1);
     const yesterdayStr = yesterday.toISOString().split("T")[0];

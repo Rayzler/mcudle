@@ -86,14 +86,14 @@ export const HowToPlayModal = ({
               ) : isImageMode ? (
                 <>
                   <li>
-                    You'll see a heavily zoomed image (8x zoom) of a character
+                    You'll see a heavily zoomed image of a character
                   </li>
                   <li>
                     Start guessing! The image is very zoomed in to make it
                     challenging
                   </li>
                   <li>
-                    With each wrong guess, the zoom level decreases by 0.5x
+                    With each wrong guess, the zoom level decreases
                   </li>
                   <li>
                     The image gradually reveals more detail until you reach

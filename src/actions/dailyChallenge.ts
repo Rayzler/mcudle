@@ -1,6 +1,7 @@
 import { getUTCDate } from "@/lib/dateUtils";
 import { prisma } from "@/lib/prisma";
 import { DailyChallenge } from "@/types/prisma";
+import { Prisma } from "@prisma/client";
 
 export const getDailyChallenge = async (): Promise<DailyChallenge> => {
   try {
@@ -127,9 +128,7 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
     while (randomCharacterResult.length === 0 && attempts < 5) {
       const result = await prisma.$queryRaw<Array<{ id: string }>>`
         SELECT id FROM characters 
-        WHERE id NOT IN (${
-          recentClassicIds.length > 0 ? recentClassicIds.join(",") : "''"
-        })
+        WHERE id NOT IN (${Prisma.join(recentClassicIds)})
         ORDER BY RANDOM() LIMIT 1
       `;
       randomCharacterResult = result;
@@ -141,9 +140,7 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
     while (randomPosterCharacterResult.length === 0 && attempts < 5) {
       const result = await prisma.$queryRaw<Array<{ id: string }>>`
         SELECT id FROM characters 
-        WHERE id NOT IN (${
-          recentPosterIds.length > 0 ? recentPosterIds.join(",") : "''"
-        })
+        WHERE id NOT IN (${Prisma.join(recentPosterIds)})
         ORDER BY RANDOM() LIMIT 1
       `;
       randomPosterCharacterResult = result;
@@ -156,9 +153,7 @@ export const createDailyChallenge = async (): Promise<DailyChallenge> => {
       const result = await prisma.$queryRaw<Array<{ id: string }>>`
         SELECT id FROM characters 
         WHERE (emojis IS NOT NULL AND emojis != '')
-        AND id NOT IN (${
-          recentEmojiIds.length > 0 ? recentEmojiIds.join(",") : "''"
-        })
+        AND id NOT IN (${Prisma.join(recentEmojiIds)})
         ORDER BY RANDOM() LIMIT 1
       `;
       randomEmojiCharacterResult = result;
