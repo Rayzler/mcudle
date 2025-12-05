@@ -23,22 +23,36 @@ const CharactersInput = ({
 
   // Load all characters from cache on mount
   useEffect(() => {
+    let isMounted = true;
+
     const loadCharacters = async () => {
       if (!allCharactersRef.current) {
-        setIsLoading(true);
+        if (isMounted) {
+          setIsLoading(true);
+        }
         try {
           const cachedCharacters = await getCachedCharacters();
-          allCharactersRef.current = cachedCharacters;
+          if (isMounted) {
+            allCharactersRef.current = cachedCharacters;
+          }
         } catch (error) {
           console.error("Error loading characters:", error);
-          allCharactersRef.current = [];
+          if (isMounted) {
+            allCharactersRef.current = [];
+          }
         } finally {
-          setIsLoading(false);
+          if (isMounted) {
+            setIsLoading(false);
+          }
         }
       }
     };
 
     loadCharacters();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Debounce the input value

@@ -1,35 +1,22 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { Suspense } from "react";
 import "./globals.css";
-import {
-  getDailyChallenge,
-  getLastDailyChallenge
-} from "@/lib/dailyChallengeCache";
 import { shareTech } from "@/fonts";
 import Footer from "@/components/footer";
 import Logo from "@/components/logo";
-import { getAllCharactersForCache } from "@/lib/charactersCache";
+import CachePrewarmer from "@/components/cache-prewarmer";
 
 export const metadata: Metadata = {
   title: "MCU-DLE",
   description: "Guess the daily Marvel Cinematic Universe character!"
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Pre-warm caches asynchronously without blocking the app
-  // These fire in parallel and don't block rendering
-  Promise.all([
-    getDailyChallenge(),
-    getLastDailyChallenge(),
-    getAllCharactersForCache()
-  ]).catch((error) => {
-    console.error("Error pre-warming caches:", error);
-  });
-
   return (
     <html lang="en">
       <body className={`${shareTech.className} antialiased`}>
@@ -49,6 +36,10 @@ export default async function RootLayout({
           </main>
           <Footer />
         </div>
+        {/* Pre-warm cache in background without blocking UI */}
+        <Suspense fallback={null}>
+          <CachePrewarmer />
+        </Suspense>
       </body>
     </html>
   );
