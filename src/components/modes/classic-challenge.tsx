@@ -45,10 +45,14 @@ export const ClassicChallenge = ({ character, lastCharacter }: Props) => {
   const randomPosition = useImageZoomPosition(character.id);
 
   // Memoize quote selection to ensure it doesn't change on every render
-  const quoteClue = useMemo(
-    () => getDailyRandomElement(character.quote?.map((q) => q.text) || []) ?? null,
-    [character.quote]
-  );
+  const quoteClue = useMemo(() => {
+    const quotes = character.quote?.map((q) => q.text) || [];
+    try {
+      return getDailyRandomElement(quotes);
+    } catch {
+      return undefined;
+    }
+  }, [character.quote]);
 
   // Check if character has quotes available
   const hasQuotes = (character.quote?.length ?? 0) > 0;

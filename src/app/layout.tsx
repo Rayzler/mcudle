@@ -8,6 +8,7 @@ import {
 import { shareTech } from "@/fonts";
 import Footer from "@/components/footer";
 import Logo from "@/components/logo";
+import { getAllCharactersForCache } from "@/lib/charactersCache";
 
 export const metadata: Metadata = {
   title: "MCU-DLE",
@@ -19,9 +20,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Pre-warm the cache by fetching challenges at root level
-  // This ensures all mode pages will use the cached results
-  await Promise.all([getDailyChallenge(), getLastDailyChallenge()]);
+  // Pre-warm caches asynchronously without blocking the app
+  // These fire in parallel and don't block rendering
+  Promise.all([
+    getDailyChallenge(),
+    getLastDailyChallenge(),
+    getAllCharactersForCache()
+  ]).catch((error) => {
+    console.error("Error pre-warming caches:", error);
+  });
 
   return (
     <html lang="en">
