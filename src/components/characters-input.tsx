@@ -1,6 +1,6 @@
 "use client";
 
-import { getCharactersByQuery } from "@/actions/characters";
+import { getCachedCharacters } from "@/lib/charactersCache-server";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Character } from "@/types/prisma";
 import { useEffect, useState, useRef } from "react";
@@ -11,30 +11,6 @@ type Props = {
   disabled?: boolean;
 };
 
-// Client-side cache for recent searches (1 hour)
-const searchCache = new Map<
-  string,
-  { results: Character[]; timestamp: number }
->();
-const CACHE_TTL = 60 * 60 * 1000; // 1 hour in milliseconds
-
-const getCachedResults = (query: string): Character[] | null => {
-  const cached = searchCache.get(query);
-  if (!cached) return null;
-
-  // Check if cache is still valid
-  if (Date.now() - cached.timestamp > CACHE_TTL) {
-    searchCache.delete(query);
-    return null;
-  }
-
-  return cached.results;
-};
-
-const setCachedResults = (query: string, results: Character[]): void => {
-  searchCache.set(query, { results, timestamp: Date.now() });
-};
-
 const CharactersInput = ({
   onCharacterSelected,
   selectedIds,
@@ -43,73 +19,69 @@ const CharactersInput = ({
   const [characters, setCharacters] = useState<Character[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const allCharactersRef = useRef<Character[] | null>(null);
 
-  // Track the latest query to prevent stale responses
-  const latestQueryRef = useRef<string>("");
-  const abortControllerRef = useRef<AbortController | null>(null);
-
-  // Debounce the input value to reduce queries - reduced to 100ms since we have cache
-  const debouncedQuery = useDebounce(inputValue, 100);
-
-  // Perform search when debounced value changes
+  // Load all characters from cache on mount
   useEffect(() => {
-    if (!debouncedQuery || !inputValue.trim()) {
-      setCharacters([]);
-      latestQueryRef.current = "";
-      return;
-    }
+    let isMounted = true;
 
-    // Update the latest query
-    latestQueryRef.current = debouncedQuery;
-
-    // Cancel previous request if it exists
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // Create new abort controller for this request
-    abortControllerRef.current = new AbortController();
-    const currentQuery = debouncedQuery;
-
-    // Check client-side cache first and show immediately
-    const cachedResults = getCachedResults(currentQuery);
-    if (cachedResults !== null) {
-      setCharacters(cachedResults);
-      setIsLoading(false);
-      return;
-    }
-
-    // No cache, show loading while fetching
-    setCharacters([]);
-    setIsLoading(true);
-
-    const performSearch = async () => {
-      try {
-        const response = await getCharactersByQuery(currentQuery, selectedIds);
-
-        // Only update UI if this is still the latest query
-        if (latestQueryRef.current === currentQuery) {
-          // Store in client cache
-          setCachedResults(currentQuery, response);
-          setCharacters(response);
+    const loadCharacters = async () => {
+      if (!allCharactersRef.current) {
+        if (isMounted) {
+          setIsLoading(true);
         }
-      } catch (error) {
-        // Ignore abort errors
-        if (error instanceof Error && error.name === "AbortError") {
-          return;
+        try {
+          const cachedCharacters = await getCachedCharacters();
+          if (isMounted) {
+            allCharactersRef.current = cachedCharacters;
+          }
+        } catch (error) {
+          console.error("Error loading characters:", error);
+          if (isMounted) {
+            allCharactersRef.current = [];
+          }
+        } finally {
+          if (isMounted) {
+            setIsLoading(false);
+          }
         }
-
-        console.error("Search error:", error);
-        // Only clear on error if it's the latest query
-        if (latestQueryRef.current === currentQuery) {
-          setCharacters([]);
-        }
-      } finally {
-        setIsLoading(false);
       }
     };
 
-    performSearch();
+    loadCharacters();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Debounce the input value
+  const debouncedQuery = useDebounce(inputValue, 150);
+
+  // Filter characters locally when debounced query changes
+  useEffect(() => {
+    if (!debouncedQuery || !inputValue.trim()) {
+      setCharacters([]);
+      return;
+    }
+
+    if (!allCharactersRef.current) {
+      setCharacters([]);
+      return;
+    }
+
+    // Filter locally from cached characters
+    const filtered = allCharactersRef.current.filter((char) => {
+      // Exclude already selected characters
+      if (selectedIds?.includes(char.id)) {
+        return false;
+      }
+
+      // Match by name
+      return char.name.toLowerCase().startsWith(debouncedQuery.toLowerCase());
+    });
+
+    setCharacters(filtered);
   }, [debouncedQuery, selectedIds]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +115,7 @@ const CharactersInput = ({
         }`}
         onChange={handleInputChange}
       />
-      {(characters.length > 0 || isLoading) && (
+      {inputValue.trim() && (characters.length > 0 || isLoading) && (
         <div className="mt-2.5 bg-neutral-800 rounded-md max-h-60 overflow-y-auto box-reflect-mask w-full absolute z-20">
           {isLoading && characters.length === 0 ? (
             <div className="flex items-center justify-center py-8">

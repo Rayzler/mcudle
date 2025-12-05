@@ -1,27 +1,38 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { after } from "next/server";
 import "./globals.css";
+import { shareTech } from "@/fonts";
+import Footer from "@/components/footer";
+import Logo from "@/components/logo";
 import {
   getDailyChallenge,
   getLastDailyChallenge
 } from "@/lib/dailyChallengeCache";
-import { shareTech } from "@/fonts";
-import Footer from "@/components/footer";
-import Logo from "@/components/logo";
+import { getAllCharactersForCache } from "@/lib/charactersCache";
 
 export const metadata: Metadata = {
   title: "MCU-DLE",
   description: "Guess the daily Marvel Cinematic Universe character!"
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Pre-warm the cache by fetching challenges at root level
-  // This ensures all mode pages will use the cached results
-  await Promise.all([getDailyChallenge(), getLastDailyChallenge()]);
+  // Pre-warm cache after response is sent (truly non-blocking)
+  after(async () => {
+    try {
+      await Promise.all([
+        getDailyChallenge(),
+        getLastDailyChallenge(),
+        getAllCharactersForCache()
+      ]);
+    } catch (error) {
+      console.error("Error pre-warming caches:", error);
+    }
+  });
 
   return (
     <html lang="en">
