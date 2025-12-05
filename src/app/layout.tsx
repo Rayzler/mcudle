@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Suspense } from "react";
+import { after } from "next/server";
 import "./globals.css";
 import { shareTech } from "@/fonts";
 import Footer from "@/components/footer";
 import Logo from "@/components/logo";
-import CachePrewarmer from "@/components/cache-prewarmer";
+import {
+  getDailyChallenge,
+  getLastDailyChallenge
+} from "@/lib/dailyChallengeCache";
+import { getAllCharactersForCache } from "@/lib/charactersCache";
 
 export const metadata: Metadata = {
   title: "MCU-DLE",
@@ -17,6 +21,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Pre-warm cache after response is sent (truly non-blocking)
+  after(async () => {
+    try {
+      await Promise.all([
+        getDailyChallenge(),
+        getLastDailyChallenge(),
+        getAllCharactersForCache()
+      ]);
+    } catch (error) {
+      console.error("Error pre-warming caches:", error);
+    }
+  });
+
   return (
     <html lang="en">
       <body className={`${shareTech.className} antialiased`}>
@@ -36,10 +53,6 @@ export default function RootLayout({
           </main>
           <Footer />
         </div>
-        {/* Pre-warm cache in background without blocking UI */}
-        <Suspense fallback={null}>
-          <CachePrewarmer />
-        </Suspense>
       </body>
     </html>
   );
